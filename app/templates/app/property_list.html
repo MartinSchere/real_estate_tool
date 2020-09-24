@@ -1,0 +1,70 @@
+{% extends 'app/base.html' %} {% block content %} {% load crispy_forms_tags %}
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col col-lg-3 card">
+      <h2 class="text-center mt-1">Filter</h2>
+      <form method="get">
+        {{ filter.form|crispy }}
+        <div class="text-center mb-3">
+          <input type="submit" class="btn btn-primary" value="search" />
+        </div>
+      </form>
+    </div>
+    <div class="col">
+      {% for property in properties %}
+
+      <form method="post" action="">
+        {% csrf_token %}
+        <div class="card mb-2">
+          <div class="card-header">
+            <h5 class="d-inline-block align-middle">
+              {% if property.property_type == 'H' %} 🏠
+              <!---->
+              {% elif property.property_type == 'F'%} 🏢 {% endif %}{{property}}
+            </h5>
+          </div>
+          <div class="card-body">
+            {% if property.loan %}
+            <h5 class="card-title">Loan for this property:</h5>
+            <div class="card" style="width: 18rem">
+              <div class="card-body">
+                <h5 class="card-title">
+                  {{property.loan.amount}} at {{property.loan.interest_rate}}%
+                </h5>
+                <h6 class="card-subtitle mb-2 text-muted">Bank of america</h6>
+                <p class="card-text">
+                  Some quick example text to build on the card title and make up
+                  the bulk of the card's content.
+                </p>
+                <a
+                  href="{% url 'loan_edit' property.loan.id %}"
+                  class="btn btn-primary"
+                  >Edit</a
+                >
+              </div>
+            </div>
+            {% else %}
+            <h5 class="card-title">No loans for this property</h5>
+            {% endif %}
+            <hr />
+            <h5 class="">Cashflow</h5>
+          </div>
+        </div>
+      </form>
+
+      {% empty %}
+
+      <div class="card mb-2">
+        <div class="card-header">
+          <h5 class="d-inline-block align-middle">No properties here...</h5>
+        </div>
+        <div class="card-body"></div>
+      </div>
+
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

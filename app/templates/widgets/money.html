@@ -1,0 +1,18 @@
+{% load crispy_forms_tags %}
+<div class="row">
+  <div class="col" style="width: 49%">
+    {% with widget=widget.subwidgets.0 %} {% include widget.template_name %}
+    <!---->
+    {% endwith %}
+  </div>
+  <div class="col" style="width: 49%">
+    {% with widget=widget.subwidgets.1 %} {% include widget.template_name %}
+    <!---->
+    {% endwith %}
+  </div>
+  <style>
+    .select {
+      width: 50%;
+    }
+  </style>
+</div>

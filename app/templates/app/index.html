@@ -1,0 +1,49 @@
+{% extends 'app/base.html' %} {% block content %}
+
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <h1 class="display-5">Monthly cashflow: ${{stats.monthly_cashflow}}</h1>
+    <p class="lead">
+      This is a modified jumbotron that occupies the entire horizontal space of
+      its parent.
+    </p>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header d-flex">
+    <h5 style="line-height: 1.5">🏠 My properties</h5>
+    <div class="ml-5">
+      <a href="{% url 'property_create' %}" class="btn btn-primary"> Add </a>
+      <a href="{% url 'property_list' %}" class="btn btn-outline-primary">
+        See full list</a
+      >
+    </div>
+  </div>
+  <div class="card-body d-flex flex-wrap">
+    {% for property in properties %}<a
+      href="{% url 'property_edit' property.id %}"
+      class="card text-center m-2"
+      style="width: 23%"
+    >
+      <img
+        class="card-img-top"
+        src="{{ property.image_url }}"
+        alt="Card image cap"
+      />
+      <div class="card-body">
+        {% if not property.tenant %}
+        <span class="badge badge-warning">Vacant</span>
+        {% endif %}
+
+        <div class="card-title">
+          <h5 class="d-inline-block align-middle">{{property}}</h5>
+        </div>
+      </div>
+    </a>
+    {% empty %}
+    <h3 class="text-muted">No properties here...</h3>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock content %}

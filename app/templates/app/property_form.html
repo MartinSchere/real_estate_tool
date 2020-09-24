@@ -1,0 +1,33 @@
+{% extends 'app/base.html' %} {% load crispy_forms_tags %} {% block content %}
+<div class="jumbotron jumbotron-fluid">
+  <div class="container-fluid">
+    {% if property.estimated_value %}
+    <h3 class="display-5">Estimated value: ${{property.estimated_value}}</h3>
+    {% endif %}
+    <h1 class="display-5">Net income: ${{stats.monthly_cashflow}}</h1>
+  </div>
+</div>
+<div class="container-fluid p-0">
+  <div class="container-fluid mw-25 shadow-sm p-5 mt-4 bg-white rounded">
+    <h3 class="mb-3 text-center">Edit property</h3>
+    {% if form.errors %}
+    <div class="alert alert-danger text-center" role="alert">
+      Please enter valid credentials
+    </div>
+    {% endif %} {% if messages %} {% for message in messages %}
+    <div class="alert alert-success text-center" role="alert">{{message}}</div>
+    {% endfor %}{% endif %}
+    <form method="post" action="" class="flex">
+      {% csrf_token %} {% for field in form %}
+      <div class="form-group mb-4 font-weight-bold">
+        {{field|as_crispy_field}}
+      </div>
+      {% endfor %}
+      <div class="text-center">
+        <input type="submit" value="Save" class="btn btn-primary" />
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock content %}

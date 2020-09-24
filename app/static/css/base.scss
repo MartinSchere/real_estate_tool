@@ -1,0 +1,40 @@
+$light-black: #434445;
+$gray: #605f5e;
+$whitesmoke: #f7f7f7;
+
+body {
+  .navbar {
+    background-color: white;
+  }
+  .container-fluid {
+    .row {
+      .sidebar {
+        background-color: $whitesmoke;
+        padding-top: 2rem;
+        .sidebar-sticky {
+          ul > .nav-item > .nav-link {
+            color: $light-black;
+            font-weight: bold;
+
+            svg {
+              width: 1rem;
+              opacity: 0.8;
+              margin-right: 0.4rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.map_canvas_wrapper {
+  margin: 1em 0 0 0;
+  #map_canvas {
+    width: 100%;
+    max-height: 250px;
+  }
+}
+#id_address {
+  width: 100% !important;
+}

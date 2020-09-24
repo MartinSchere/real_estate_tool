@@ -1,0 +1,33 @@
+body .navbar {
+  background-color: white;
+}
+
+body .container-fluid .row .sidebar {
+  background-color: #f7f7f7;
+  padding-top: 2rem;
+}
+
+body .container-fluid .row .sidebar .sidebar-sticky ul > .nav-item > .nav-link {
+  color: #434445;
+  font-weight: bold;
+}
+
+body .container-fluid .row .sidebar .sidebar-sticky ul > .nav-item > .nav-link svg {
+  width: 1rem;
+  opacity: 0.8;
+  margin-right: 0.4rem;
+}
+
+.map_canvas_wrapper {
+  margin: 1em 0 0 0;
+}
+
+.map_canvas_wrapper #map_canvas {
+  width: 100%;
+  max-height: 250px;
+}
+
+#id_address {
+  width: 100% !important;
+}
+/*# sourceMappingURL=base.css.map */
