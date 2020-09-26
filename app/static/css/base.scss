@@ -3,8 +3,14 @@ $gray: #605f5e;
 $whitesmoke: #f7f7f7;
 
 body {
+  .select {
+    width: 100%;
+  }
   .navbar {
     background-color: white;
+  }
+  .jumbotron {
+    margin-bottom: 0.5em !important;
   }
   .container-fluid {
     .row {

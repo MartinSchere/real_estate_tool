@@ -1,5 +1,13 @@
+body .select {
+  width: 100%;
+}
+
 body .navbar {
   background-color: white;
+}
+
+body .jumbotron {
+  margin-bottom: 0.5em !important;
 }
 
 body .container-fluid .row .sidebar {

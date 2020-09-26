@@ -1,33 +1,101 @@
 {% extends 'app/base.html' %} {% load crispy_forms_tags %} {% block content %}
+{% if form.instance.pk %}
 <div class="jumbotron jumbotron-fluid">
   <div class="container-fluid">
     {% if property.estimated_value %}
     <h3 class="display-5">Estimated value: ${{property.estimated_value}}</h3>
     {% endif %}
-    <h1 class="display-5">Net income: ${{stats.monthly_cashflow}}</h1>
+    <h1 class="display-5">Net cashflow: {{property.tenant.rent_payment}}</h1>
   </div>
 </div>
+{% endif %}
 <div class="container-fluid p-0">
-  <div class="container-fluid mw-25 shadow-sm p-5 mt-4 bg-white rounded">
-    <h3 class="mb-3 text-center">Edit property</h3>
-    {% if form.errors %}
-    <div class="alert alert-danger text-center" role="alert">
-      Please enter valid credentials
+  <div class="row m-0">
+    <div
+      class="col mw-25 mr-1 shadow-sm p-4 mb-4 bg-white rounded"
+      style="width: 49%"
+    >
+      {% if form.errors %}
+      <div class="alert alert-danger text-center" role="alert">
+        Please check the fields below
+      </div>
+      {% endif %} {% if messages %} {% for message in messages %}
+      <div class="alert alert-success text-center" role="alert">
+        {{message}}
+      </div>
+      {% endfor %}{% endif %}
+      <form method="post" action="" class="flex">
+        {% csrf_token %} {% for field in form %}
+        <div class="form-group mb-2 font-weight-bold">
+          {{field|as_crispy_field}}
+        </div>
+        {% endfor %}
+        <div class="text-center">
+          <input type="submit" value="Save" class="btn btn-primary" />
+        </div>
+      </form>
     </div>
-    {% endif %} {% if messages %} {% for message in messages %}
-    <div class="alert alert-success text-center" role="alert">{{message}}</div>
-    {% endfor %}{% endif %}
-    <form method="post" action="" class="flex">
-      {% csrf_token %} {% for field in form %}
-      <div class="form-group mb-4 font-weight-bold">
-        {{field|as_crispy_field}}
-      </div>
-      {% endfor %}
-      <div class="text-center">
-        <input type="submit" value="Save" class="btn btn-primary" />
-      </div>
-    </form>
-  </div>
-</div>
+    <div class="col ml-1" style="width: 49%">
+      <div
+        class="row shadow-sm mb-2 p-4 bg-white rounded flex-column"
+        style="height: 48%"
+      >
+        <div class="col-sm-2 header">
+          <h3>Tenant</h3>
+        </div>
+        <div class="col d-flex align-items-center">
+          {% if property.tenant %}
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">{{ property.tenant }}</h5>
+              <p class="card-text">Rent: {{property.tenant.rent_payment}}</p>
+              <a
+                href="{% url 'tenant_edit' property.tenant.id %}"
+                class="btn btn-primary"
+                >Edit</a
+              >
+            </div>
+          </div>
+          {% else %}
 
-{% endblock content %}
+          <h5 class="text-muted mb-3">
+            This property is currently vacant... <br />
+            <a href="{% url 'tenant_create' %}">add tenant</a>
+          </h5>
+          {% endif %}
+        </div>
+      </div>
+      <div
+        class="row shadow-sm mb-2 p-4 bg-white rounded flex-column"
+        style="height: 48%"
+      >
+        <div class="col-sm-2 header">
+          <h3>Mortgage</h3>
+        </div>
+        <div class="col d-flex align-items-center">
+          {% if property.loan %}
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">{{ property.loan }}</h5>
+              <p class="card-text">Rent: {{property.loan}}</p>
+              <a
+                href="{% url 'loan_edit' property.loan.id %}"
+                class="btn btn-primary"
+                >Edit</a
+              >
+            </div>
+          </div>
+          {% else %}
+
+          <h5 class="text-muted mb-3">
+            This property has no mortgage<br />
+            <a href="{% url 'loan_create' %}">add mortgage</a>
+          </h5>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% endblock content %}
+</div>

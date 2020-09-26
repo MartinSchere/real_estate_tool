@@ -7,10 +7,10 @@ from django.views.generic import ListView
 from django_filters.views import FilterView
 from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.messages.views import SuccessMessageMixin
-from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 
-from .models import Property, Loan
-from .forms import UserRegisterForm, LoanEditForm, PropertyCreateForm, TenantCreateForm
+from .models import Property, Loan, Tenant
+from .forms import UserRegisterForm, LoanForm, PropertyForm, TenantForm
 
 from .stats import UserStats
 from .utils import get_property_image, get_estimated_value
@@ -36,7 +36,7 @@ def index(request):
 # PROPERTIES
 
 
-class PropertyListView(FilterView):
+class PropertyListView(LoginRequiredMixin, FilterView):
     template_name = 'app/property_list.html'
     context_object_name = 'properties'
     model = Property
@@ -44,34 +44,30 @@ class PropertyListView(FilterView):
                         'estimated_value', 'address', 'owned_since']
 
 
-@login_required
-def PropertyCreateView(request):
-    if request.method == 'POST':
-        form = PropertyCreateForm(request.POST)
+class PropertyCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    model = Property
+    form_class = PropertyForm
 
-        if form.is_valid():
-            new_property = form.save(commit=False)
-            new_property.user = request.user
-            new_property.image_url = get_property_image(new_property)
-            new_property.save()
-
-            return redirect(new_property)
-
-    else:
-        form = PropertyCreateForm()
-    return render(request, 'app/property_form.html', {'form': form})
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        form.instance.image = get_property_image(form.instance)
+        return super().form_valid(form)
 
 
 class PropertyEditView(SuccessMessageMixin, UserPassesTestMixin, UpdateView):
     model = Property
     success_message = 'Changes saved successfully'
-    form_class = PropertyCreateForm
+    form_class = PropertyForm
 
     def get_object(self, *args):
         obj = super().get_object()
         obj.estimated_value = get_estimated_value(obj)
         obj.save()
         return obj
+
+    def form_valid(self, form):
+        form.instance.image_url = get_property_image(form.instance)
+        return super().form_valid(form)
 
     def test_func(self):
         return self.request.user == self.get_object().user
@@ -80,25 +76,40 @@ class PropertyEditView(SuccessMessageMixin, UserPassesTestMixin, UpdateView):
 
 
 class LoanEditView(SuccessMessageMixin, UserPassesTestMixin, UpdateView):
-    template_name = 'app/loan_edit.html'
     model = Loan
-    form_class = LoanEditForm
+    form_class = LoanForm
     success_message = 'Changes saved successfully'
 
     def test_func(self):
         return self.request.user == self.get_object().property.user
 
 
+class LoanListView(LoginRequiredMixin, FilterView):
+    model = Loan
+    context_object_name = 'tenants'
+    template_name = 'app/loan_list.html'
+    filterset_fields = ['name', 'rent_payment']
+
+
+class LoanCreateView(LoginRequiredMixin, CreateView):
+    model = Loan
+    form_class = LoanForm
+
 # TENANTS
-@login_required
-def TenantCreateView(request):
-    if request.method == 'POST':
-        form = TenantCreateForm(request.POST)
 
-        if form.is_valid():
-            form.save()
-            return redirect(new_property)
 
-    else:
-        form = TenantCreateForm()
-    return render(request, 'app/tenant_form.html', {'form': form})
+class TenantListView(LoginRequiredMixin, FilterView):
+    model = Tenant
+    context_object_name = 'tenants'
+    template_name = 'app/tenant_list.html'
+    filterset_fields = ['name', 'rent_payment']
+
+
+class TenantCreateView(LoginRequiredMixin, CreateView):
+    model = Tenant
+    form_class = TenantForm
+
+
+class TenantEditView(LoginRequiredMixin, UpdateView):
+    model = Tenant
+    form_class = TenantForm

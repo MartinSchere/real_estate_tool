@@ -19,7 +19,7 @@ PROPERTY_IMAGE_PARAMS = {
 }
 
 
-def validate_percentage(value):
+def percentage_validator(value):
     if not (value > 0 and value < 100):
         raise ValidationError(
             _('%(value)s must be between 0 and 100'),
@@ -53,7 +53,9 @@ def get_estimated_value(obj):
     url = 'http://www.zillow.com/webservice/GetSearchResults.htm'
     rev_geocoded = reverse_geocode(property_location)[0]
     citystatezip = rev_geocoded['admin1']
+    """
     res = requests.get(url, params={'zws-id': settings.ZWS_ID,
                                     'address': address,
                                     'citystatezip': citystatezip})
-    print(citystatezip)
+    print(res.text, res.url)
+    """

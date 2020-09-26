@@ -1,12 +1,9 @@
 {% extends 'app/base.html' %} {% block content %}
 
 <div class="jumbotron jumbotron-fluid">
-  <div class="container">
-    <h1 class="display-5">Monthly cashflow: ${{stats.monthly_cashflow}}</h1>
-    <p class="lead">
-      This is a modified jumbotron that occupies the entire horizontal space of
-      its parent.
-    </p>
+  <div class="container-fluid">
+    <h1 class="display-5">Monthly net income: {{stats.monthly_net_income}}</h1>
+    <p class="lead"></p>
   </div>
 </div>
 <div class="card">

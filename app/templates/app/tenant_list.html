@@ -1,0 +1,38 @@
+{% extends 'app/base.html' %} {% block content %} {% load crispy_forms_tags %}
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col col-lg-3 card">
+      <h2 class="text-center mt-1">Filter</h2>
+      <form method="get">
+        {{ filter.form|crispy }}
+        <div class="text-center mb-3">
+          <input type="submit" class="btn btn-primary" value="search" />
+        </div>
+      </form>
+    </div>
+    <div class="col">
+      {% for tenant in tenants %}
+
+      <div class="card mb-2">
+        <div class="card-header">
+          <h5 class="d-inline-block align-middle">{{tenant.name}}</h5>
+        </div>
+        <div class="card-body"></div>
+      </div>
+
+      {% empty %}
+
+      <div class="card mb-2">
+        <div class="card-header">
+          <h5 class="d-inline-block align-middle">No tenants here...</h5>
+        </div>
+        <div class="card-body"></div>
+      </div>
+
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

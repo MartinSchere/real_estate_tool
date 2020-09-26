@@ -10,6 +10,10 @@ import django_filters
 from .models import Property, Loan, Tenant
 
 
+class CustomMoneyWidget(MoneyWidget):
+    template_name = 'widgets/money.html'
+
+
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField()
 
@@ -26,11 +30,7 @@ class PropertyFilter(django_filters.FilterSet):
         fields = ['address', 'owned_since', 'geolocation', 'bought_for']
 
 
-class CustomMoneyWidget(MoneyWidget):
-    template_name = 'widgets/money.html'
-
-
-class PropertyCreateForm(forms.ModelForm):
+class PropertyForm(forms.ModelForm):
 
     class Meta:
         model = Property
@@ -46,22 +46,17 @@ class PropertyCreateForm(forms.ModelForm):
         }
 
 
-class LoanEditForm(forms.ModelForm):
+class LoanForm(forms.ModelForm):
     class Meta:
         model = Loan
-        fields = '__all__'
-
-    def __init__(self, *args, **kwargs):
-        super(LoanEditForm, self).__init__(*args, **kwargs)
-
-        amount, currency = self.fields['amount'].fields
-
-        self.fields['amount'].widget = CustomMoneyWidget(
-            amount_widget=amount.widget, currency_widget=currency.widget,
-            attrs={'class': 'form-control'})
+        fields = ['down_payment', 'total_price', 'interest_rate', 'program']
+        widgets = {
+            'down_payment': CustomMoneyWidget(attrs={'class': 'form-control'}),
+            'total_price': CustomMoneyWidget(attrs={'class': 'form-control'})
+        }
 
 
-class TenantCreateForm(forms.ModelForm):
+class TenantForm(forms.ModelForm):
     class Meta:
         model = Tenant
         fields = '__all__'

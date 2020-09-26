@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 
 from django.urls import reverse
 
-from .utils import validate_percentage
+from .utils import percentage_validator
 
 PROPERTY_CHOICES = (
     ('Re', 'Residential'),
@@ -21,8 +21,6 @@ PROPERTY_CHOICES = (
 
 class Property(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    tenant = models.OneToOneField(
-        'Tenant', on_delete=models.SET_NULL, null=True, blank=True)
     loan = models.OneToOneField('Loan', null=True, on_delete=models.CASCADE)
     address = map_fields.AddressField(max_length=200)
     geolocation = map_fields.GeoLocationField(max_length=100)
@@ -46,9 +44,17 @@ class Property(models.Model):
 
 
 class Loan(models.Model):
-    amount = MoneyField(max_digits=20, decimal_places=2,
-                        default_currency='USD')
-    interest_rate = models.FloatField(validators=[validate_percentage])
+    down_payment = MoneyField(max_digits=20, decimal_places=2,
+                              default_currency='USD')
+    total_price = MoneyField(max_digits=20, decimal_places=2,
+                             default_currency='USD')
+    interest_rate = models.FloatField(validators=[percentage_validator])
+
+    program = models.CharField(max_length=30, choices=(
+        ('30F', '30-year-fixed'),
+        ('15F', '15-year-fixed'),
+        ('51A', '5/1 ARM')
+    ))
 
     def get_absolute_url(self):
         return reverse("loan_edit", kwargs={"pk": self.pk})
@@ -58,9 +64,13 @@ class Loan(models.Model):
 
 
 class Tenant(models.Model):
+    rental_property = models.OneToOneField(Property, on_delete=models.CASCADE)
     name = models.CharField(max_length=30)
     rent_payment = MoneyField(max_digits=20, decimal_places=2,
                               default_currency='USD')
+
+    def get_absolute_url(self):
+        return reverse("tenant_edit", kwargs={"pk": self.pk})
 
     def __str__(self):
         return self.name
