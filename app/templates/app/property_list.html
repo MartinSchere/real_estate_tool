@@ -2,7 +2,7 @@
 
 <div class="container-fluid">
   <div class="row">
-    <div class="col col-lg-3 card">
+    <div class="col col-lg-3 shadow-sm rounded">
       <h2 class="text-center mt-1">Filter</h2>
       <form method="get">
         {{ filter.form|crispy }}
@@ -16,7 +16,7 @@
 
       <form method="post" action="">
         {% csrf_token %}
-        <div class="card mb-2">
+        <div class="shadow-sm rounded mb-2">
           <div class="card-header">
             <h5 class="d-inline-block align-middle">
               {% if property.property_type == 'H' %} 🏠

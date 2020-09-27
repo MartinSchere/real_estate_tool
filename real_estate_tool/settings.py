@@ -2,15 +2,14 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 SECRET_KEY = 'nt7-iuw72$p^zhp_629j^f$5f&h=n*0#)x1a&3xh330)xl#56+'
 
 DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 INSTALLED_APPS = [
+    'landing',
     'app',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -113,3 +112,5 @@ LOGIN_REDIRECT_URL = '/'
 
 GOOGLE_MAPS_API_KEY = 'AIzaSyAS4jKdgqfcTV4v6Rc2eNdR34S5N-9oGdw'  # ENVIRON
 ZWS_ID = 'X1-ZWz1hzxu3tm3nv_34dhf'  # ENVIRON
+
+PRE_LAUNCH_MODE = False

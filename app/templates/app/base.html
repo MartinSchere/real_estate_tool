@@ -3,7 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Project</title>
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="{% static 'img/Logo-small.svg' %}"
+    />
+    <title>Realtool</title>
     <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
@@ -14,11 +19,10 @@
     <link rel="stylesheet" href="{% static 'css/base.css' %}" />
   </head>
   <body>
-    {% include 'app/navbar.html' %}
     <div class="container-fluid">
       <div class="row">
         {% include 'app/sidebar.html' %}
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 mt-4">
           {% block content %} {% endblock content %}
         </main>
       </div>

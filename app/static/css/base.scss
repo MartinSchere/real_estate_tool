@@ -1,8 +1,14 @@
 $light-black: #434445;
 $gray: #605f5e;
-$whitesmoke: #f7f7f7;
+$ghostwhite: #f7fafc;
 
 body {
+  .logo {
+    width: 72px;
+  }
+  .jumbotron {
+    background-color: white;
+  }
   .select {
     width: 100%;
   }
@@ -13,10 +19,14 @@ body {
     margin-bottom: 0.5em !important;
   }
   .container-fluid {
+    .property-card {
+      min-width: 23%;
+      max-width: 340px;
+    }
     .row {
       .sidebar {
-        background-color: $whitesmoke;
         padding-top: 2rem;
+        background-color: $ghostwhite;
         .sidebar-sticky {
           ul > .nav-item > .nav-link {
             color: $light-black;

@@ -1,3 +1,11 @@
+body .logo {
+  width: 72px;
+}
+
+body .jumbotron {
+  background-color: white;
+}
+
 body .select {
   width: 100%;
 }
@@ -10,9 +18,14 @@ body .jumbotron {
   margin-bottom: 0.5em !important;
 }
 
+body .container-fluid .property-card {
+  min-width: 23%;
+  max-width: 340px;
+}
+
 body .container-fluid .row .sidebar {
-  background-color: #f7f7f7;
   padding-top: 2rem;
+  background-color: #f7fafc;
 }
 
 body .container-fluid .row .sidebar .sidebar-sticky ul > .nav-item > .nav-link {

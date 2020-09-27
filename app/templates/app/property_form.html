@@ -1,6 +1,6 @@
 {% extends 'app/base.html' %} {% load crispy_forms_tags %} {% block content %}
 {% if form.instance.pk %}
-<div class="jumbotron jumbotron-fluid">
+<div class="jumbotron jumbotron-fluid rounded shadow-sm">
   <div class="container-fluid">
     {% if property.estimated_value %}
     <h3 class="display-5">Estimated value: ${{property.estimated_value}}</h3>
