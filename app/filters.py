@@ -10,15 +10,19 @@ from django.db import models
 class PropertyFilter(django_filters.FilterSet):
 
     def __init__(self, *args, **kwargs):
-        super(PropertyFilter, self).__init__(*args, **kwargs)
 
+        super().__init__(*args, **kwargs)
         strings_to_replace = ("loan", "tenant")
-
-        for string in strings_to_replace:
+        
+        for group, string in enumerate(strings_to_replace):
             for k, f in self.filters.items():
                 if string in f.field_name:
-                    formatted_name = f.field_name.replace((string + "__"), " ").replace("_", " ")
+                    # Change the name
+                    formatted_name = (f.field_name.replace((string + "__"), " ").replace("_", " ")).title()
                     self.filters[k].label = formatted_name
+                    # Bind to group
+                    self.filters[k].group = group
+                    print(self.filters[k].group)
 
     class Meta:
         model = Property
@@ -39,7 +43,7 @@ class PropertyFilter(django_filters.FilterSet):
             MoneyField: {
                 'filter_class': django_filters.RangeFilter,
                 'extra': lambda f: {
-                    'widget': django_filters.widgets.RangeWidget(attrs={'class':'form-control flex-child', 'style':'width:48%'}),
+                    'widget': django_filters.widgets.RangeWidget(attrs={'type':'number','class':'form-control flex-child', 'style':'width:48%'}),
                 },
             },
             models.FloatField: {
@@ -49,4 +53,6 @@ class PropertyFilter(django_filters.FilterSet):
                 },
             },
         }
+
+
 

@@ -3,10 +3,9 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col col-lg-3 shadow-sm rounded">
-      <h2 class="text-center mt-1">Filter</h2>
+      <h4 class="text-center mt-1">Filtering</h4>
       <form method="get" class="filter-form">
         {{ filter.form|crispy }}
-
         <div class="text-center mb-3">
           <input type="submit" class="btn btn-primary" value="search" />
         </div>
@@ -69,5 +68,19 @@
     </div>
   </div>
 </div>
+<script>
+  $(document).ready(function () {
+    var defaultSelect = $("[id^=address]");
+    var tenantSelect = $("[id^=div_id_tenant]");
+    var loanSelect = $("[id^=div_id_loan]");
+
+    tenantSelect.first().html(function (i, oldHtml) {
+      return "<hr/> <h5>Tenants</h5>" + oldHtml;
+    });
+    loanSelect.first().html(function (i, oldHtml) {
+      return "<hr/> <h5>Loans</h5>" + oldHtml;
+    });
+  });
+</script>
 
 {% endblock content %}

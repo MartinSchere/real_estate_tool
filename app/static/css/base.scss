@@ -50,11 +50,15 @@ body {
     }
   }
 }
-.filter-form .form-group > div {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-weight: bold;
+.filter-form {
+  .accodion {
+  }
+  .form-group > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: bold;
+  }
 }
 .map_canvas_wrapper {
   display: block;

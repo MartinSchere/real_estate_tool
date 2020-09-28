@@ -9,8 +9,9 @@ from django_filters.views import FilterView
 from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
+from django.contrib.auth.models import User
 
-from .models import Property, Loan, Tenant
+from .models import Property, Loan, Tenant, Setting
 from .forms import UserRegisterForm, LoanForm, PropertyForm, TenantForm
 from .filters import PropertyFilter
 
@@ -73,7 +74,6 @@ class PropertyEditView(SuccessMessageMixin, UserPassesTestMixin, UpdateView):
 
 # LOANS
 
-
 class LoanEditView(SuccessMessageMixin, UserPassesTestMixin, UpdateView):
     model = Loan
     form_class = LoanForm
@@ -95,7 +95,6 @@ class LoanCreateView(LoginRequiredMixin, CreateView):
     form_class = LoanForm
 
 # TENANTS
-
 
 class TenantListView(LoginRequiredMixin, FilterView):
     model = Tenant
@@ -121,4 +120,12 @@ class TenantEditView(SuccessMessageMixin, UserPassesTestMixin, LoginRequiredMixi
     def test_func(self):
         return self.request.user == self.get_object().rental_property.user
     
+# SETTINGS
 
+class SettingsView(LoginRequiredMixin, UpdateView):
+    model = User
+    template_name = 'app/settings.html'
+    fields = ['__all__']
+
+    def get_object(self):
+        return self.request.user

@@ -1,4 +1,6 @@
 from django import forms
+from django.forms import inlineformset_factory
+
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
@@ -6,7 +8,7 @@ from djmoney.forms.widgets import MoneyWidget
 from django_google_maps import widgets as map_widgets
 
 
-from .models import Property, Loan, Tenant
+from .models import Property, Loan, Tenant, Setting
 
 
 class CustomMoneyWidget(MoneyWidget):

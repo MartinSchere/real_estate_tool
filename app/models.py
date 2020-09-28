@@ -88,8 +88,9 @@ class Renovation(models.Model):
 
 
 class Setting(models.Model):
-    name = models.CharField(max_length=30)
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    name = models.CharField(max_length=50)
+    enabled = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name

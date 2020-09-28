@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'django_google_maps',
     'crispy_forms',
     'django_filters',
+
 ]
 
 MIDDLEWARE = [
