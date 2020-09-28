@@ -3,6 +3,7 @@ $gray: #605f5e;
 $ghostwhite: #f7fafc;
 
 body {
+  height: 100vh;
   .logo {
     width: 72px;
   }
@@ -19,11 +20,17 @@ body {
     margin-bottom: 0.5em !important;
   }
   .container-fluid {
+    &.full-h {
+      height: 100vh;
+    }
     .property-card {
       min-width: 23%;
       max-width: 340px;
     }
     .row {
+      &.full-h {
+        height: 100vh;
+      }
       .sidebar {
         padding-top: 2rem;
         background-color: $ghostwhite;
@@ -43,8 +50,14 @@ body {
     }
   }
 }
-
+.filter-form .form-group > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: bold;
+}
 .map_canvas_wrapper {
+  display: block;
   margin: 1em 0 0 0;
   #map_canvas {
     width: 100%;

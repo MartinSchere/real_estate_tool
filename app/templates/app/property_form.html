@@ -1,5 +1,7 @@
 {% extends 'app/base.html' %} {% load crispy_forms_tags %} {% block content %}
-{% if form.instance.pk %}
+{% if messages %} {% for message in messages %}
+<div class="alert alert-success text-center" role="alert">{{message}}</div>
+{% endfor %}{% endif %} {% if form.instance.pk %}
 <div class="jumbotron jumbotron-fluid rounded shadow-sm">
   <div class="container-fluid">
     {% if property.estimated_value %}
@@ -19,11 +21,7 @@
       <div class="alert alert-danger text-center" role="alert">
         Please check the fields below
       </div>
-      {% endif %} {% if messages %} {% for message in messages %}
-      <div class="alert alert-success text-center" role="alert">
-        {{message}}
-      </div>
-      {% endfor %}{% endif %}
+      {% endif %}
       <form method="post" action="" class="flex">
         {% csrf_token %} {% for field in form %}
         <div class="form-group mb-2 font-weight-bold">

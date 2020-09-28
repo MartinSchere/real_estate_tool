@@ -4,8 +4,9 @@
   <div class="row">
     <div class="col col-lg-3 shadow-sm rounded">
       <h2 class="text-center mt-1">Filter</h2>
-      <form method="get">
+      <form method="get" class="filter-form">
         {{ filter.form|crispy }}
+
         <div class="text-center mb-3">
           <input type="submit" class="btn btn-primary" value="search" />
         </div>
@@ -25,7 +26,9 @@
             </h5>
           </div>
           <div class="card-body">
-            {% if property.loan %}
+            {% if not property.tenant %}
+            <span class="badge badge-warning">Vacant</span>
+            {% endif %} {% if property.loan %}
             <h5 class="card-title">Loan for this property:</h5>
             <div class="card" style="width: 18rem">
               <div class="card-body">

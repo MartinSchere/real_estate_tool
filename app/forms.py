@@ -5,7 +5,6 @@ from django.contrib.auth.forms import UserCreationForm
 from djmoney.forms.widgets import MoneyWidget
 from django_google_maps import widgets as map_widgets
 
-import django_filters
 
 from .models import Property, Loan, Tenant
 
@@ -20,14 +19,6 @@ class UserRegisterForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'first_name']
-
-
-class PropertyFilter(django_filters.FilterSet):
-    address = django_filters.CharFilter(lookup_expr='icontains')
-
-    class Meta:
-        model = Property
-        fields = ['address', 'owned_since', 'geolocation', 'bought_for']
 
 
 class PropertyForm(forms.ModelForm):
@@ -49,7 +40,7 @@ class PropertyForm(forms.ModelForm):
 class LoanForm(forms.ModelForm):
     class Meta:
         model = Loan
-        fields = ['down_payment', 'total_price', 'interest_rate', 'program']
+        fields = ['down_payment', 'total_price', 'interest_rate', 'program', 'rental_property']
         widgets = {
             'down_payment': CustomMoneyWidget(attrs={'class': 'form-control'}),
             'total_price': CustomMoneyWidget(attrs={'class': 'form-control'})

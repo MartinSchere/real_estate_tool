@@ -8,9 +8,9 @@ class RegisterUserForm(forms.ModelForm):
         fields = ['email']
         widgets = {
             'email': forms.EmailInput(attrs={
-                'placeholder': 'Enter your email'
+                'placeholder': 'Email me when it is ready'
             })
         }
         labels = {
-            'email': 'Get 20% off on release'
+            'email': ''
         }

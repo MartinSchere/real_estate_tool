@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import views as auth_views
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
+from django import forms
 
 from django.views.generic import ListView
 from django_filters.views import FilterView
@@ -11,6 +12,7 @@ from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 
 from .models import Property, Loan, Tenant
 from .forms import UserRegisterForm, LoanForm, PropertyForm, TenantForm
+from .filters import PropertyFilter
 
 from .stats import UserStats
 from .utils import get_property_image, get_estimated_value
@@ -39,10 +41,7 @@ def index(request):
 class PropertyListView(LoginRequiredMixin, FilterView):
     template_name = 'app/property_list.html'
     context_object_name = 'properties'
-    model = Property
-    filterset_fields = ['property_type',
-                        'estimated_value', 'address', 'owned_since']
-
+    filterset_class = PropertyFilter
 
 class PropertyCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Property
@@ -110,6 +109,16 @@ class TenantCreateView(LoginRequiredMixin, CreateView):
     form_class = TenantForm
 
 
-class TenantEditView(LoginRequiredMixin, UpdateView):
+class TenantEditView(SuccessMessageMixin, UserPassesTestMixin, LoginRequiredMixin, UpdateView):
     model = Tenant
     form_class = TenantForm
+    success_message = "Tenant has been registered successfully"
+
+    def get_success_url(self):
+        prop = self.get_object().rental_property
+        return prop.get_absolute_url()
+
+    def test_func(self):
+        return self.request.user == self.get_object().rental_property.user
+    
+

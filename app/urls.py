@@ -30,6 +30,8 @@ urlpatterns = [
          path('list', views.TenantListView.as_view(), name="tenant_list"),
          path('create/', views.TenantCreateView.as_view(), name="tenant_create"),
          path('detail/<int:pk>', views.TenantEditView.as_view(), name="tenant_edit"),
+         path('detail/<int:pk>', views.TenantEditView.as_view(), name="tenant_edit_nested")
+         
          ]))
 
 ]
