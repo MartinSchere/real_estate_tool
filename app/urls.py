@@ -36,6 +36,6 @@ urlpatterns = [
 
     # Settings
 
-    path('settings/<slug:username>/', views.SettingsView.as_view(), name="settings")
+    path('settings/', views.SettingsView.as_view(), name="settings")
 
 ]

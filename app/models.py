@@ -88,7 +88,7 @@ class Renovation(models.Model):
 
 
 class Setting(models.Model):
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    user = models.ManyToManyField(User, related_name="settings")
     name = models.CharField(max_length=50)
     enabled = models.BooleanField(default=False)
 

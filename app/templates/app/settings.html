@@ -5,26 +5,44 @@
 <div class="container-fluid p-0">
   <div class="row m-0">
     <div
-      class="col mw-25 mr-1 shadow-sm p-4 mb-4 bg-white rounded"
+      class="col mw-25 mr-1 shadow-sm px-0 mb-4 bg-white rounded"
       style="width: 49%"
     >
-      {% if form.errors %}
-      <div class="alert alert-danger text-center" role="alert">
-        Please check the fields below
+      <div class="card-header">
+        <h2 class="font-weight-normal">Settings</h2>
       </div>
-      {% endif %}
-      <form method="post" action="" class="flex">
-        {% csrf_token %} {% for field in form %}
-        <div class="form-group mb-2 font-weight-bold">
-          {{field|as_crispy_field}}
+      <div class="p-3">
+        {% if form.errors %}
+        <div class="alert alert-danger text-center" role="alert">
+          Please check the fields below
         </div>
-        {% endfor %}
-        <div class="text-center">
-          <input type="submit" value="Save" class="btn btn-primary" />
-        </div>
-      </form>
+        {% endif %}
+
+        <form method="post" action="" class="flex">
+          <div class="form-group mb-3">
+            <h4 class="mb-3 font-weight-normal text-gray">Filtering</h4>
+            {% csrf_token %} {% for field in forms.property_filter_setting %}
+            <div class="form-group mb-2">{{field|as_crispy_field}}</div>
+            {% endfor %}
+          </div>
+
+          <div class="form-group">
+            <h4 class="mb-3 font-weight-normal text-gray">Credit</h4>
+            {% for field in forms.credit_score_setting %}
+            <div class="form-group mb-2">{{field|as_crispy_field}}</div>
+            {% endfor %}
+          </div>
+          <div class="text-center">
+            <input
+              type="submit"
+              value="Save"
+              id="save-settings"
+              class="btn btn-primary"
+            />
+          </div>
+        </form>
+      </div>
     </div>
   </div>
-
   {% endblock content %}
 </div>

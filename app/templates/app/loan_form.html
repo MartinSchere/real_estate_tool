@@ -1,9 +1,6 @@
 {% extends 'app/base.html' %} {% load crispy_forms_tags %} {% block content %}
 <div class="container">
-  <div
-    class="container mw-25 p-3 shadow-sm p-5 mt-4 bg-white rounded"
-    style="max-width: 440px"
-  >
+  <div class="container p-3 shadow-sm p-4 mt-4 bg-white rounded">
     {% if form.errors %}
     <div class="alert alert-danger text-center" role="alert">
       Please enter valid credentials
@@ -17,8 +14,17 @@
         {{field|as_crispy_field}}
       </div>
       {% endfor %}
+
+      <div>
+        <iframe
+          src="https://www.mortgagecalculator.org/webmasters/?downpayment=50000&homevalue=300000&loanammount=250000&interestrate=4&loanterm=30&propertytax=2400&pmi=1&homeinsurance=1000&monthlyhoa=0"
+          style="width: 100%; height: 1200px; border: 0"
+        ></iframe>
+        <p>Data provided by <a href="">MortgageCalculator.com</a></p>
+      </div>
       <input type="submit" value="Save" class="btn btn-primary" />
     </form>
   </div>
 </div>
+
 {% endblock content %}

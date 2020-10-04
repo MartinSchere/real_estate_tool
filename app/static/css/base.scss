@@ -2,8 +2,12 @@ $light-black: #434445;
 $gray: #605f5e;
 $ghostwhite: #f7fafc;
 
+$breakpoint-phone: 768px;
+$breakpoint-tablet: 1000px;
+
 body {
   height: 100vh;
+
   .logo {
     width: 72px;
   }
@@ -13,13 +17,18 @@ body {
   .select {
     width: 100%;
   }
-  .navbar {
-    background-color: white;
-  }
   .jumbotron {
     margin-bottom: 0.5em !important;
+    @media (max-width: 720px) {
+      padding: 2rem 1rem;
+    }
   }
   .container-fluid {
+    &:nth-child(1) {
+      @media (max-width: $breakpoint-tablet) {
+        padding: 0 !important;
+      }
+    }
     &.full-h {
       height: 100vh;
     }
@@ -31,9 +40,24 @@ body {
       &.full-h {
         height: 100vh;
       }
+      @media (max-width: $breakpoint-phone) {
+        .mobile-full {
+          width: 100% !important;
+          flex-basis: auto !important;
+        }
+        .col {
+          height: 100%;
+        }
+      }
       .sidebar {
+        @media (max-width: $breakpoint-tablet) {
+          max-width: 25%;
+          width: auto;
+          flex: 1;
+        }
         padding-top: 2rem;
         background-color: $ghostwhite;
+
         .sidebar-sticky {
           ul > .nav-item > .nav-link {
             color: $light-black;
@@ -48,11 +72,19 @@ body {
         }
       }
     }
+    .navbar-brand {
+      position: absolute;
+      right: 0.2em;
+      top: 0.2em;
+    }
+  }
+  @media (min-width: $breakpoint-phone) {
+    .show-mobile {
+      display: none !important;
+    }
   }
 }
 .filter-form {
-  .accodion {
-  }
   .form-group > div {
     display: flex;
     align-items: center;
@@ -70,4 +102,7 @@ body {
 }
 #id_address {
   width: 100% !important;
+}
+#id_credit_score {
+  width: 20%;
 }

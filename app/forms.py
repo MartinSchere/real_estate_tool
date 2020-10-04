@@ -1,3 +1,4 @@
+import json
 from django import forms
 from django.forms import inlineformset_factory
 
@@ -6,7 +7,6 @@ from django.contrib.auth.forms import UserCreationForm
 
 from djmoney.forms.widgets import MoneyWidget
 from django_google_maps import widgets as map_widgets
-
 
 from .models import Property, Loan, Tenant, Setting
 
@@ -30,7 +30,9 @@ class PropertyForm(forms.ModelForm):
         fields = ['address', 'owned_since',
                   'geolocation', 'bought_for', 'property_type']
         widgets = {
-            'address':  map_widgets.GoogleMapsAddressWidget(attrs={'data-map-type': 'roadmap'}),
+            'address':  map_widgets.GoogleMapsAddressWidget(attrs={'data-map-type': 'roadmap', 'data-autocomplete-options':json.dumps({
+                'componentRestrictions':{'country':'us'}
+            })}),
             'geolocation': forms.HiddenInput(),
             'owned_since': forms.DateInput(attrs={
                 'placeholder': 'YYYY-MM-DD'
@@ -42,13 +44,8 @@ class PropertyForm(forms.ModelForm):
 class LoanForm(forms.ModelForm):
     class Meta:
         model = Loan
-        fields = ['down_payment', 'total_price', 'interest_rate', 'program', 'rental_property']
-        widgets = {
-            'down_payment': CustomMoneyWidget(attrs={'class': 'form-control'}),
-            'total_price': CustomMoneyWidget(attrs={'class': 'form-control'})
-        }
-
-
+        fields = ['rental_property']
+        
 class TenantForm(forms.ModelForm):
     class Meta:
         model = Tenant
@@ -56,3 +53,4 @@ class TenantForm(forms.ModelForm):
         widgets = {
             'rent_payment': CustomMoneyWidget(attrs={'class': 'form-control'})
         }
+

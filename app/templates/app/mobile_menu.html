@@ -1,0 +1,31 @@
+{% load static %} {% block mobile_menu %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light show-mobile">
+  <button
+    class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavDropdown"
+    aria-controls="navbarNavDropdown"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+  >
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse mt-3" id="navbarNavDropdown">
+    <ul class="navbar-nav font-weight-bold">
+      <li class="nav-item active">
+        <a class="nav-link" href="{% url 'index' %}">📈 Dashboard </a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="{% url 'property_list' %}">🏠 Properties </a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="{% url 'tenant_list' %}"> 🧑‍🤝‍🧑 Tenants </a>
+      </li>
+    </ul>
+  </div>
+  <a class="navbar-brand" href="#"
+    ><img src="{% static 'img/Logo-small.svg' %}" width="30" height="30" alt=""
+  /></a>
+</nav>
+{% endblock mobile_menu %}

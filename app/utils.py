@@ -26,6 +26,13 @@ def percentage_validator(value):
             params={'value': value},
         )
 
+def credit_score_validator(value):
+    if not (value >= 300 and value <= 850):
+        raise ValidationError(
+            _('Credit score must be between 300 and 850'),
+            params={'value': value},
+        )  
+
 
 def reverse_geocode(coords):
     return rg.search((coords.lat, coords.lon))
@@ -45,17 +52,3 @@ def get_property_image(prop, **params):
         return res.url
     except:
         return
-
-
-def get_estimated_value(obj):
-    property_location = obj.geolocation
-    address = obj.address.split(",")[0]
-    url = 'http://www.zillow.com/webservice/GetSearchResults.htm'
-    rev_geocoded = reverse_geocode(property_location)[0]
-    citystatezip = rev_geocoded['admin1']
-    """
-    res = requests.get(url, params={'zws-id': settings.ZWS_ID,
-                                    'address': address,
-                                    'citystatezip': citystatezip})
-    print(res.text, res.url)
-    """

@@ -1,23 +1,30 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import views as auth_views
+from django.db import IntegrityError
 from django.urls import reverse_lazy, reverse
 from django import forms
 
 from django.views.generic import ListView
 from django_filters.views import FilterView
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView, FormView
 from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.contrib.auth.models import User
 
+from multi_form_view import MultiFormView
+
 from .models import Property, Loan, Tenant, Setting
 from .forms import UserRegisterForm, LoanForm, PropertyForm, TenantForm
-from .filters import PropertyFilter
+from .user_settings import PropertyFilterSetting, CreditScoreSetting
+from .filters import PropertyFilter, PropertyFilterWithoutTenant
 
 from .stats import UserStats
-from .utils import get_property_image, get_estimated_value
+from .utils import get_property_image
+from .zillow import get_estimated_value, get_mortgage
 
+from user_settings.utils import get_user_setting, set_user_setting
 
 class SignUpView(SuccessMessageMixin, CreateView):
     template_name = 'registration/register.html'
@@ -42,7 +49,11 @@ def index(request):
 class PropertyListView(LoginRequiredMixin, FilterView):
     template_name = 'app/property_list.html'
     context_object_name = 'properties'
-    filterset_class = PropertyFilter
+
+    def get_filterset_class(self):
+        print(get_user_setting('filter_by_tenants', request=self.request))
+        return PropertyFilterWithoutTenant if not get_user_setting('filter_by_tenants', request=self.request)['value'] else PropertyFilter
+
 
 class PropertyCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Property
@@ -94,6 +105,12 @@ class LoanCreateView(LoginRequiredMixin, CreateView):
     model = Loan
     form_class = LoanForm
 
+    def form_valid(self, form):
+        instance = form.save(commit=False)
+        instance.monthly_payment = get_mortgage(instance)
+
+        return super().form_valid(instance)
+
 # TENANTS
 
 class TenantListView(LoginRequiredMixin, FilterView):
@@ -122,10 +139,54 @@ class TenantEditView(SuccessMessageMixin, UserPassesTestMixin, LoginRequiredMixi
     
 # SETTINGS
 
-class SettingsView(LoginRequiredMixin, UpdateView):
-    model = User
+class SettingsView(MultiFormView, LoginRequiredMixin):
     template_name = 'app/settings.html'
-    fields = ['__all__']
+    form_classes = {
+        'property_filter_setting':PropertyFilterSetting,
+        'credit_score_setting':CreditScoreSetting,
+    }
+    success_url = '/settings/'
 
-    def get_object(self):
-        return self.request.user
+    def get_initial(self):
+        initial = {
+            'property_filter_setting': {
+            'filter_by_loans':get_user_setting('filter_by_loans', request=self.request)['value'],
+            'filter_by_tenants':get_user_setting('filter_by_tenants', request=self.request)['value'],
+        }, 
+            'credit_score_setting': {
+                'credit_score':get_user_setting('credit_score', request=self.request)['value']
+        }}
+        return initial
+    
+    def forms_valid(self, forms):
+        #print(forms['property_filter_setting'].cleaned_data)
+        for key, value in forms.items():
+            for k, v in value.cleaned_data.items():
+                try:
+                    set_user_setting(k, v, request=self.request)
+                except IntegrityError:
+                    pass
+        messages.success(self.request, "Changes saved successfully")
+        return super().forms_valid(forms)
+
+
+"""
+@login_required
+def SettingsView(request):
+    forms = []
+    if request.method == 'POST':
+        forms += PropertyFilterSetting(request.POST)
+        if form.is_valid():
+            for k, v in form.cleaned_data.items():
+                set_user_setting(k, v, request=request)
+        
+    else:
+        initial = {
+            'filter_by_loans':bool(get_user_setting('filter_by_loans', request=request)['value']),
+            'filter_by_tenants':bool(get_user_setting('filter_by_tenants', request=request)['value']),
+        }
+
+        forms += PropertyFilterSetting(initial=initial)
+
+    return render(request, 'app/settings.html', {'forms' : forms})
+ """

@@ -16,12 +16,12 @@
       crossorigin="anonymous"
     />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
     {{ form.media }}
     <link rel="stylesheet" href="{% static 'css/base.css' %}" />
   </head>
   <body>
     <div class="container-fluid full-h">
+      {% include 'app/mobile_menu.html' %}
       <div class="row full-h">
         {% include 'app/sidebar.html' %}
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 mt-4">
