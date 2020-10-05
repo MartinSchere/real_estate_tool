@@ -26,6 +26,7 @@ from .zillow import get_estimated_value, get_mortgage
 
 from user_settings.utils import get_user_setting, set_user_setting
 
+
 class SignUpView(SuccessMessageMixin, CreateView):
     template_name = 'registration/register.html'
     success_url = reverse_lazy('login')
@@ -85,6 +86,7 @@ class PropertyEditView(SuccessMessageMixin, UserPassesTestMixin, UpdateView):
 
 # LOANS
 
+
 class LoanEditView(SuccessMessageMixin, UserPassesTestMixin, UpdateView):
     model = Loan
     form_class = LoanForm
@@ -113,6 +115,7 @@ class LoanCreateView(LoginRequiredMixin, CreateView):
 
 # TENANTS
 
+
 class TenantListView(LoginRequiredMixin, FilterView):
     model = Tenant
     context_object_name = 'tenants'
@@ -136,30 +139,31 @@ class TenantEditView(SuccessMessageMixin, UserPassesTestMixin, LoginRequiredMixi
 
     def test_func(self):
         return self.request.user == self.get_object().rental_property.user
-    
+
 # SETTINGS
+
 
 class SettingsView(MultiFormView, LoginRequiredMixin):
     template_name = 'app/settings.html'
     form_classes = {
-        'property_filter_setting':PropertyFilterSetting,
-        'credit_score_setting':CreditScoreSetting,
+        'property_filter_setting': PropertyFilterSetting,
+        'credit_score_setting': CreditScoreSetting,
     }
     success_url = '/settings/'
 
     def get_initial(self):
         initial = {
             'property_filter_setting': {
-            'filter_by_loans':get_user_setting('filter_by_loans', request=self.request)['value'],
-            'filter_by_tenants':get_user_setting('filter_by_tenants', request=self.request)['value'],
-        }, 
+                'filter_by_loans': get_user_setting('filter_by_loans', request=self.request)['value'],
+                'filter_by_tenants': get_user_setting('filter_by_tenants', request=self.request)['value'],
+            },
             'credit_score_setting': {
-                'credit_score':get_user_setting('credit_score', request=self.request)['value']
-        }}
+                'credit_score': get_user_setting('credit_score', request=self.request)['value']
+            }}
         return initial
-    
+
     def forms_valid(self, forms):
-        #print(forms['property_filter_setting'].cleaned_data)
+        # print(forms['property_filter_setting'].cleaned_data)
         for key, value in forms.items():
             for k, v in value.cleaned_data.items():
                 try:
@@ -168,25 +172,3 @@ class SettingsView(MultiFormView, LoginRequiredMixin):
                     pass
         messages.success(self.request, "Changes saved successfully")
         return super().forms_valid(forms)
-
-
-"""
-@login_required
-def SettingsView(request):
-    forms = []
-    if request.method == 'POST':
-        forms += PropertyFilterSetting(request.POST)
-        if form.is_valid():
-            for k, v in form.cleaned_data.items():
-                set_user_setting(k, v, request=request)
-        
-    else:
-        initial = {
-            'filter_by_loans':bool(get_user_setting('filter_by_loans', request=request)['value']),
-            'filter_by_tenants':bool(get_user_setting('filter_by_tenants', request=request)['value']),
-        }
-
-        forms += PropertyFilterSetting(initial=initial)
-
-    return render(request, 'app/settings.html', {'forms' : forms})
- """

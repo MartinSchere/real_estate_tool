@@ -1,0 +1,67 @@
+$light-black: #434445;
+$gray: #605f5e;
+$ghostwhite: #f7fafc;
+
+body {
+  //background: url("/static/img/Mobile-background.png") 50% 0 no-repeat fixed;
+  @media (min-width: 440px) {
+    background: url("/static/img/background.png") 50% 0 no-repeat fixed;
+  }
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  .navbar {
+    position: absolute;
+    top: 0;
+  }
+
+  main {
+    align-self: center;
+    .hero {
+      margin: 0 2em 2em 0;
+      @media (max-width: 900px) {
+        transform: none;
+      }
+      h5 {
+        @media (min-width: 760px) {
+          max-width: 50%;
+        }
+      }
+      h1 {
+        @media (min-width: 1000px) {
+          max-width: 50%;
+        }
+        @media (max-width: 670px) {
+          font-size: 3.7rem;
+        }
+        @media (max-width: 300px) {
+          margin-top: 1em;
+          font-size: 3rem;
+        }
+      }
+      form {
+        @media (min-width: 670px) {
+          max-width: 50%;
+        }
+        @media (min-width: 920px) {
+          max-width: 30%;
+        }
+        @media (max-width: 670px) {
+          max-width: 70%;
+        }
+
+        .asteriskField {
+          display: none;
+        }
+        label {
+          font-weight: bold;
+        }
+      }
+      input.btn {
+        font-weight: bold;
+      }
+    }
+  }
+}

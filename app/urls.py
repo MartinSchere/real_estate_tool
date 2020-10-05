@@ -19,7 +19,7 @@ urlpatterns = [
     # Loans
 
     path('loans/', include([
-        path('list/<int:pk>', views.LoanListView.as_view(), name="loan_list"),
+        path('list/', views.LoanListView.as_view(), name="loan_list"),
         path('detail/<int:pk>', views.LoanEditView.as_view(), name="loan_edit"),
         path('create/', views.LoanCreateView.as_view(), name="loan_create"),
     ])),
@@ -30,8 +30,8 @@ urlpatterns = [
          path('list', views.TenantListView.as_view(), name="tenant_list"),
          path('create/', views.TenantCreateView.as_view(), name="tenant_create"),
          path('detail/<int:pk>', views.TenantEditView.as_view(), name="tenant_edit"),
-         path('detail/<int:pk>', views.TenantEditView.as_view(), name="tenant_edit_nested"),
-         
+         path('detail/<int:pk>', views.TenantEditView.as_view(),
+              name="tenant_edit_nested"),
          ])),
 
     # Settings
