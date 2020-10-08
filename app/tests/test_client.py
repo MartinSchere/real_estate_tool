@@ -52,3 +52,14 @@ class TestClient(TestCase):
             reverse('property_edit', kwargs={'pk': prop.pk}), new_prop)
         self.assertEquals(
             Property.objects.last().address, '10422 Tabor St, Los Angeles, California')
+
+    def test_delete_property(self):
+        self.client.force_login(self.mock_user)
+
+        prop = Property.objects.create(
+            user=self.mock_user, **self.mock_property)
+
+        res = self.client.post(
+            reverse('property_delete', kwargs={'pk': prop.pk}))
+
+        self.assertEquals(res.status_code, 302)

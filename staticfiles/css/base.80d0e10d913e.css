@@ -2,17 +2,12 @@ body {
   height: 100vh;
 }
 
-body table {
-  border-collapse: separate !important;
-}
-
 body .logo {
   width: 72px;
 }
 
 body .jumbotron {
   background-color: white;
-  padding: 3.25rem 2rem;
 }
 
 body .select {
@@ -127,4 +122,4 @@ body .container-fluid .navbar-brand {
 #id_credit_score {
   width: 20%;
 }
-/*# sourceMappingURL=base.css.map */
+/*# sourceMappingURL=base.80d0e10d913e.css.map */

@@ -7,13 +7,13 @@ from django import forms
 
 from django.views.generic import ListView
 from django_filters.views import FilterView
-from django.views.generic.edit import CreateView, UpdateView, FormView
+from django.views.generic.edit import CreateView, UpdateView, FormView, DeleteView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.contrib.auth.models import User
 
-from multi_form_view import MultiFormView
+from multi_form_view import MultiFormView, MultiModelFormView
 
 from .models import Property, Loan, Tenant, Setting
 from .forms import UserRegisterForm, LoanForm, PropertyForm, TenantForm
@@ -22,7 +22,7 @@ from .filters import PropertyFilter, PropertyFilterWithoutTenant
 
 from .stats import UserStats
 from .utils import get_property_image
-from .zillow import get_estimated_value, get_mortgage
+from .zillow import get_estimated_value
 
 from user_settings.utils import get_user_setting, set_user_setting
 
@@ -56,20 +56,29 @@ class PropertyListView(LoginRequiredMixin, FilterView):
         return PropertyFilterWithoutTenant if not get_user_setting('filter_by_tenants', request=self.request)['value'] else PropertyFilter
 
 
-class PropertyCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
-    model = Property
-    form_class = PropertyForm
+class PropertyCreateView(LoginRequiredMixin, SuccessMessageMixin, MultiModelFormView):
+    form_classes = {'property_form': PropertyForm,
+                    # 'loan_form': LoanForm,
+                    'tenant_form': TenantForm}
+    template_name = 'app/property_create.html'
+    success_message = "Property added successfully"
 
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        form.instance.image = get_property_image(form.instance)
-        return super().form_valid(form)
+    def forms_valid(self, forms):
+        prop = forms['property_form'].instance
+        prop.user = self.request.user
+        prop.image_url = get_property_image(prop)
+        forms['tenant_form'].instance.rental_property = prop
+        saved_prop = forms['property_form'].save()
+        self.success_url = reverse(
+            'property_edit', kwargs={'pk': saved_prop.id})
+        return super().forms_valid(forms)
 
 
 class PropertyEditView(SuccessMessageMixin, UserPassesTestMixin, UpdateView):
     model = Property
     success_message = 'Changes saved successfully'
     form_class = PropertyForm
+    template_name = "app/property_edit.html"
 
     def get_object(self, *args):
         obj = super().get_object()
@@ -83,6 +92,15 @@ class PropertyEditView(SuccessMessageMixin, UserPassesTestMixin, UpdateView):
 
     def test_func(self):
         return self.request.user == self.get_object().user
+
+
+class PropertyDeleteView(DeleteView, UserPassesTestMixin):
+    model = Property
+    success_url = reverse_lazy('property_list')
+
+    def test_func(self):
+        return self.request.user == self.get_object().user
+
 
 # LOANS
 

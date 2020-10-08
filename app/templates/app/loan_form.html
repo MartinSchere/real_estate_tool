@@ -8,20 +8,11 @@
     {% endif %} {% if messages %} {% for message in messages %}
     <div class="alert alert-success text-center" role="alert">{{message}}</div>
     {% endfor %} {% endif %}
-    <form method="post" action="" class="flex text-center">
+    <form method="post" action="" class="">
       {% csrf_token %} {% for field in form %}
-      <div class="form-group text-center mb-4 font-weight-bold">
-        {{field|as_crispy_field}}
-      </div>
+      <div class="form-group text-center mb-4 font-weight-bold"></div>
       {% endfor %}
-
-      <div>
-        <iframe
-          src="https://www.mortgagecalculator.org/webmasters/?downpayment=50000&homevalue=300000&loanammount=250000&interestrate=4&loanterm=30&propertytax=2400&pmi=1&homeinsurance=1000&monthlyhoa=0"
-          style="width: 100%; height: 1200px; border: 0"
-        ></iframe>
-        <p>Data provided by <a href="">MortgageCalculator.com</a></p>
-      </div>
+      <div>{% include 'app/mortgage_calculator.html' %}</div>
       <input type="submit" value="Save" class="btn btn-primary" />
     </form>
   </div>

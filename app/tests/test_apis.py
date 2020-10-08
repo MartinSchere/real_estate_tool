@@ -24,10 +24,11 @@ class TestApis(SimpleTestCase):
 
     def test_zillow(self):
         for address in self.mock_addresses:
-            res = requests.get(API_URLS['GetSearchResults'], params={
-                'zws-id': settings.ZWS_ID, 'citystatezip': self.mock_citystatezip, 'address': address})
-
-            self.assertNotIn("Error", res.text)
+            res = requests.get(API_URLS['GetZestimate'], params={
+                'access_token': settings.ZILLOW_ACCESS_TOKEN, 'address': address
+            })
+            print(res.text)
+            self.assertEquals(res.json()['success'], True)
 
     def test_google_maps_streetview(self):
         base_url = 'https://maps.googleapis.com/maps/api/streetview'

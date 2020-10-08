@@ -14,6 +14,8 @@ urlpatterns = [
              name="property_edit"),
         path('create/', views.PropertyCreateView.as_view(),
              name="property_create"),
+        path('delete/<int:pk>', views.PropertyDeleteView.as_view(),
+             name="property_delete"),
     ])),
 
     # Loans

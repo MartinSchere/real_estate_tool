@@ -23,7 +23,6 @@ class Property(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     address = map_fields.AddressField(max_length=200)
     geolocation = map_fields.GeoLocationField(max_length=100)
-    zws_id = models.CharField(max_length=len(settings.ZWS_ID), null=True)
     property_type = models.CharField(choices=PROPERTY_CHOICES, max_length=2)
     bought_for = MoneyField(max_digits=20, decimal_places=2,
                             default_currency='USD', null=True, blank=True)
@@ -56,7 +55,7 @@ class Loan(models.Model):
         ('51A', '5/1 ARM')
     ))
     monthly_payment = MoneyField(max_digits=20, decimal_places=2,
-                              default_currency='USD')
+                                 default_currency='USD')
 
     def get_absolute_url(self):
         return reverse("loan_edit", kwargs={"pk": self.pk})

@@ -1,0 +1,54 @@
+{% extends 'app/base.html' %} {% load crispy_forms_tags %} {% block content %}
+{% if messages %} {% for message in messages %}
+<div class="alert alert-success text-center" role="alert">{{message}}</div>
+{% endfor %}{% endif %}{% if form.errors %}
+<div class="alert alert-danger text-center" role="alert">
+  Please check the fields below
+</div>
+{% endif %}
+
+<div class="container-fluid p-0 m-2">
+  <form action="" method="post">
+    <div class="row mb-4">
+      {% csrf_token %}
+      <div class="col mw-25 mr-1 shadow-sm p-4 bg-white rounded mobile-full">
+        {% if forms.property_form.errors %}
+        <div class="alert alert-danger text-center" role="alert">
+          Please check the fields below
+        </div>
+        {% endif %} {% csrf_token %} {% for field in forms.property_form %}
+        <div class="form-group mb-2 font-weight-bold">
+          {{field|as_crispy_field}}
+        </div>
+        {% endfor %}
+      </div>
+      <div class="col ml-1 h-100">
+        <div class="row shadow-sm mb-2 p-4 bg-white rounded flex-column">
+          <div class="col-sm-2 header">
+            <h3>Tenant</h3>
+          </div>
+          <div class="col">
+            {% for field in forms.tenant_form %}
+            <div class="form-goup">{{field|as_crispy_field}}</div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="row shadow-sm mb-2 p-4 bg-white rounded flex-column">
+          <div class="col-sm-2 header">
+            <h3>Mortgage</h3>
+          </div>
+          <div class="col">
+            {% for field in forms.loan_form %}
+            <div class="form-goup">{{field|as_crispy_field}}</div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row align-items-center justify-content-center">
+      <input type="submit" value="Save" class="btn btn-primary" />
+    </div>
+  </form>
+</div>
+
+{% endblock content %}

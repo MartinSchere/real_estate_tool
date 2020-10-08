@@ -30,8 +30,8 @@ class PropertyForm(forms.ModelForm):
         fields = ['address', 'owned_since',
                   'geolocation', 'bought_for', 'property_type']
         widgets = {
-            'address':  map_widgets.GoogleMapsAddressWidget(attrs={'data-map-type': 'roadmap', 'data-autocomplete-options':json.dumps({
-                'componentRestrictions':{'country':'us'}
+            'address':  map_widgets.GoogleMapsAddressWidget(attrs={'data-map-type': 'roadmap', 'data-autocomplete-options': json.dumps({
+                'componentRestrictions': {'country': 'us'}
             })}),
             'geolocation': forms.HiddenInput(),
             'owned_since': forms.DateInput(attrs={
@@ -45,12 +45,12 @@ class LoanForm(forms.ModelForm):
     class Meta:
         model = Loan
         fields = ['rental_property']
-        
+
+
 class TenantForm(forms.ModelForm):
     class Meta:
         model = Tenant
-        fields = '__all__'
+        exclude = ('rental_property',)
         widgets = {
             'rent_payment': CustomMoneyWidget(attrs={'class': 'form-control'})
         }
-

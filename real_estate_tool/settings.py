@@ -22,7 +22,7 @@ INSTALLED_APPS = [
     'django_google_maps',
     'crispy_forms',
     'django_filters',
-   'user_settings'
+    'user_settings'
 
 ]
 
@@ -114,8 +114,8 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 LOGIN_REDIRECT_URL = '/'
 
 GOOGLE_MAPS_API_KEY = 'AIzaSyAS4jKdgqfcTV4v6Rc2eNdR34S5N-9oGdw'  # ENVIRON
-ZWS_ID = 'X1-ZWz1hzxu3tm3nv_34dhf'  # ENVIRON
-ZILLOW_PARTNER_ID = 'RD-PMSDMSN' # ENVIRON
+ZILLOW_ACCESS_TOKEN = 'a70c59971022cff30bb560933ff6798c'  # ENVIRON
+ZILLOW_PARTNER_ID = 'RD-PMSDMSN'  # ENVIRON
 
 PRE_LAUNCH_MODE = False
 

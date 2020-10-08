@@ -1,0 +1,97 @@
+body {
+  height: 100vh;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+@media (min-width: 440px) {
+  body {
+    background: url("/static/img/background.png") 50% 0 no-repeat fixed;
+  }
+}
+
+body .navbar {
+  position: absolute;
+  top: 0;
+}
+
+body main {
+  -ms-flex-item-align: center;
+      -ms-grid-row-align: center;
+      align-self: center;
+}
+
+body main .hero {
+  margin: 0 2em 2em 0;
+}
+
+@media (max-width: 900px) {
+  body main .hero {
+    -webkit-transform: none;
+            transform: none;
+  }
+}
+
+@media (min-width: 760px) {
+  body main .hero h5 {
+    max-width: 50%;
+  }
+}
+
+@media (min-width: 1000px) {
+  body main .hero h1 {
+    max-width: 50%;
+  }
+}
+
+@media (max-width: 670px) {
+  body main .hero h1 {
+    font-size: 3.7rem;
+  }
+}
+
+@media (max-width: 300px) {
+  body main .hero h1 {
+    margin-top: 1em;
+    font-size: 3rem;
+  }
+}
+
+@media (min-width: 670px) {
+  body main .hero form {
+    max-width: 50%;
+  }
+}
+
+@media (min-width: 920px) {
+  body main .hero form {
+    max-width: 30%;
+  }
+}
+
+@media (max-width: 670px) {
+  body main .hero form {
+    max-width: 70%;
+  }
+}
+
+body main .hero form .asteriskField {
+  display: none;
+}
+
+body main .hero form label {
+  font-weight: bold;
+}
+
+body main .hero input.btn {
+  font-weight: bold;
+}
+/*# sourceMappingURL=index.b23313bcab10.css.map */

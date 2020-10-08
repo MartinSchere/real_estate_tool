@@ -8,11 +8,16 @@ $breakpoint-tablet: 1000px;
 body {
   height: 100vh;
 
+  table {
+    border-collapse: separate !important;
+  }
+
   .logo {
     width: 72px;
   }
   .jumbotron {
     background-color: white;
+    padding: 3.25rem 2rem;
   }
   .select {
     width: 100%;
