@@ -1,3 +1,6 @@
+from djmoney.money import Money
+
+
 class UserStats:
     def __init__(self, user):
         self.user = user
@@ -5,10 +8,13 @@ class UserStats:
 
     @property
     def monthly_net_income(self):
-        res = 0.0
+
+        res = Money(0, 'USD')
+
         for p in self.user_properties:
-            print(p)
-            # res -= p.loan.
-            if p.tenant:
+            if hasattr(p, 'loan'):
+                res -= p.loan.monthly_payment
+            if hasattr(p, 'tenant'):
                 res += p.tenant.rent_payment
+
         return res

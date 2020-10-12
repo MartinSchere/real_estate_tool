@@ -2,6 +2,15 @@ body {
   height: 100vh;
 }
 
+@media (max-width: 768px) {
+  body h5 {
+    font-size: 1rem;
+  }
+  body .card-body {
+    padding: 12.5px;
+  }
+}
+
 body table {
   border-collapse: separate !important;
 }
@@ -23,7 +32,7 @@ body .jumbotron {
   margin-bottom: 0.5em !important;
 }
 
-@media (max-width: 720px) {
+@media (max-width: 768px) {
   body .jumbotron {
     padding: 2rem 1rem;
   }
@@ -39,13 +48,25 @@ body .container-fluid.full-h {
   height: 100vh;
 }
 
-body .container-fluid .property-card {
-  min-width: 23%;
-  max-width: 340px;
+body .container-fluid .property-image {
+  min-height: 50%;
+}
+
+body .container-fluid .property-card:hover {
+  cursor: pointer;
+  background-color: whitesmoke;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 }
 
 body .container-fluid .row.full-h {
   height: 100vh;
+}
+
+body .container-fluid .row .filter-container {
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
 }
 
 @media (max-width: 768px) {

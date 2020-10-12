@@ -7,6 +7,14 @@ $breakpoint-tablet: 1000px;
 
 body {
   height: 100vh;
+  @media (max-width: $breakpoint-phone) {
+    h5 {
+      font-size: 1rem;
+    }
+    .card-body {
+      padding: 12.5px;
+    }
+  }
 
   table {
     border-collapse: separate !important;
@@ -24,7 +32,7 @@ body {
   }
   .jumbotron {
     margin-bottom: 0.5em !important;
-    @media (max-width: 720px) {
+    @media (max-width: $breakpoint-phone) {
       padding: 2rem 1rem;
     }
   }
@@ -37,13 +45,20 @@ body {
     &.full-h {
       height: 100vh;
     }
-    .property-card {
-      min-width: 23%;
-      max-width: 340px;
+    .property-image {
+      min-height: 50%;
+    }
+    .property-card:hover {
+      cursor: pointer;
+      background-color: rgb(245, 245, 245);
+      transition: 0.4s;
     }
     .row {
       &.full-h {
         height: 100vh;
+      }
+      .filter-container {
+        height: fit-content;
       }
       @media (max-width: $breakpoint-phone) {
         .mobile-full {

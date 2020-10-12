@@ -41,10 +41,30 @@ class PropertyForm(forms.ModelForm):
         }
 
 
-class LoanForm(forms.ModelForm):
+class LoanCreateForm(forms.ModelForm):
     class Meta:
         model = Loan
-        fields = ['rental_property']
+        fields = ['interest_rate', 'term', 'down_payment']
+        widgets = {
+            'down_payment': CustomMoneyWidget(attrs={'class': 'form-control'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['term'].label = "Term (years)"
+
+
+class LoanEditForm(forms.ModelForm):
+    class Meta:
+        model = Loan
+        fields = ['rental_property', 'interest_rate', 'term', 'down_payment']
+        widgets = {
+            'down_payment': CustomMoneyWidget(attrs={'class': 'form-control'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['term'].label = "Term (years)"
 
 
 class TenantForm(forms.ModelForm):
@@ -52,5 +72,5 @@ class TenantForm(forms.ModelForm):
         model = Tenant
         exclude = ('rental_property',)
         widgets = {
-            'rent_payment': CustomMoneyWidget(attrs={'class': 'form-control'})
+            'rent_payment': CustomMoneyWidget(attrs={'class': 'form-control'}),
         }

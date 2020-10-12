@@ -2,7 +2,7 @@
 
 <div class="container-fluid">
   <div class="row">
-    <div class="col col-lg-3 shadow-sm rounded">
+    <div class="col col-xl-3 col-md-4 filter-container shadow-sm rounded">
       <h4 class="text-center mt-1">Filtering</h4>
       <form method="get" class="filter-form">
         {{ filter.form|crispy }}
@@ -11,50 +11,44 @@
         </div>
       </form>
     </div>
-    <div class="col">
+    <div class="col ml-2">
       {% for property in properties %}
-
-      <form method="post" action="">
-        {% csrf_token %}
-        <div class="shadow-sm rounded mb-2">
+      <div
+        class="row property-card mb-2"
+        onclick="location.href='{% url 'property_edit' property.id %}'"
+      >
+        {% if property.image_url %}
+        <img
+          class="col-lg-4 col-xl-3 p-0"
+          src="{{ property.image_url }}"
+          alt=""
+        />
+        {% endif %}
+        <div class="col shadow-sm rounded p-0">
           <div class="card-header">
-            <h5 class="d-inline-block align-middle">
-              {% if property.property_type == 'H' %} 🏠
-              <!---->
-              {% elif property.property_type == 'F'%} 🏢 {% endif %}{{property}}
-            </h5>
+            <h5 class="d-inline-block align-middle">{{property.address}}</h5>
           </div>
           <div class="card-body">
             {% if not property.tenant %}
             <span class="badge badge-warning">Vacant</span>
-            {% endif %} {% if property.loan %}
-            <h5 class="card-title">Loan for this property:</h5>
-            <div class="card" style="width: 18rem">
-              <div class="card-body">
-                <h5 class="card-title">
-                  {{property.loan.amount}} at {{property.loan.interest_rate}}%
-                </h5>
-                <h6 class="card-subtitle mb-2 text-muted">Bank of america</h6>
-                <p class="card-text">
-                  Some quick example text to build on the card title and make up
-                  the bulk of the card's content.
-                </p>
-                <a
-                  href="{% url 'loan_edit' property.loan.id %}"
-                  class="btn btn-primary"
-                  >Edit</a
-                >
-              </div>
-            </div>
-            {% else %}
-            <h5 class="card-title">No loans for this property</h5>
             {% endif %}
+            <p class="">
+              Cashflow:
+              <strong
+                class="{% if property.get_net_cashflow.amount < 0 %}text-danger{% else %}text-success{% endif %}"
+                >{{property.get_net_cashflow}}</strong
+              >
+            </p>
             <hr />
-            <h5 class="">Cashflow</h5>
+            {% if not property.estimated_value %}
+            <p class="text-muted font-weight-bold">No estimation available</p>
+            {% else %}
+            <h5 class="d-inline">{{property.estimated_value}}</h5>
+            <p class="text-muted font-weight-bold">estimated value</p>
+            {% endif %}
           </div>
         </div>
-      </form>
-
+      </div>
       {% empty %}
 
       <div class="card mb-2">
@@ -64,10 +58,11 @@
         <div class="card-body"></div>
       </div>
 
-      {% endfor %}
+      {% endfor %} {% include "app/pagination.html" %}
     </div>
   </div>
 </div>
+
 <script>
   $(document).ready(function () {
     var defaultSelect = $("[id^=address]");

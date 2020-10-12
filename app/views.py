@@ -16,7 +16,7 @@ from django.contrib.auth.models import User
 from multi_form_view import MultiFormView, MultiModelFormView
 
 from .models import Property, Loan, Tenant, Setting
-from .forms import UserRegisterForm, LoanForm, PropertyForm, TenantForm
+from .forms import UserRegisterForm, LoanCreateForm, LoanEditForm, PropertyForm, TenantForm
 from .user_settings import PropertyFilterSetting, CreditScoreSetting
 from .filters import PropertyFilter, PropertyFilterWithoutTenant
 
@@ -50,15 +50,15 @@ def index(request):
 class PropertyListView(LoginRequiredMixin, FilterView):
     template_name = 'app/property_list.html'
     context_object_name = 'properties'
+    paginate_by = 5
 
     def get_filterset_class(self):
-        print(get_user_setting('filter_by_tenants', request=self.request))
         return PropertyFilterWithoutTenant if not get_user_setting('filter_by_tenants', request=self.request)['value'] else PropertyFilter
 
 
 class PropertyCreateView(LoginRequiredMixin, SuccessMessageMixin, MultiModelFormView):
     form_classes = {'property_form': PropertyForm,
-                    # 'loan_form': LoanForm,
+                    'loan_form': LoanCreateForm,
                     'tenant_form': TenantForm}
     template_name = 'app/property_create.html'
     success_message = "Property added successfully"
@@ -67,8 +67,13 @@ class PropertyCreateView(LoginRequiredMixin, SuccessMessageMixin, MultiModelForm
         prop = forms['property_form'].instance
         prop.user = self.request.user
         prop.image_url = get_property_image(prop)
+
+        loan = forms['loan_form'].instance
+        loan.rental_property = prop
+
         forms['tenant_form'].instance.rental_property = prop
         saved_prop = forms['property_form'].save()
+
         self.success_url = reverse(
             'property_edit', kwargs={'pk': saved_prop.id})
         return super().forms_valid(forms)
@@ -82,8 +87,9 @@ class PropertyEditView(SuccessMessageMixin, UserPassesTestMixin, UpdateView):
 
     def get_object(self, *args):
         obj = super().get_object()
-        obj.estimated_value = get_estimated_value(obj)
-        obj.save()
+        #obj.estimated_value = get_estimated_value(obj)
+        # if obj.estimated_value != None:
+        #    obj.save()
         return obj
 
     def form_valid(self, form):
@@ -107,11 +113,11 @@ class PropertyDeleteView(DeleteView, UserPassesTestMixin):
 
 class LoanEditView(SuccessMessageMixin, UserPassesTestMixin, UpdateView):
     model = Loan
-    form_class = LoanForm
+    form_class = LoanEditForm
     success_message = 'Changes saved successfully'
 
     def test_func(self):
-        return self.request.user == self.get_object().property.user
+        return self.request.user == self.get_object().rental_property.user
 
 
 class LoanListView(LoginRequiredMixin, FilterView):
@@ -123,11 +129,10 @@ class LoanListView(LoginRequiredMixin, FilterView):
 
 class LoanCreateView(LoginRequiredMixin, CreateView):
     model = Loan
-    form_class = LoanForm
+    form_class = LoanCreateForm
 
     def form_valid(self, form):
         instance = form.save(commit=False)
-        instance.monthly_payment = get_mortgage(instance)
 
         return super().form_valid(instance)
 

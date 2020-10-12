@@ -11,7 +11,9 @@
   <form action="" method="post">
     <div class="row mb-4">
       {% csrf_token %}
-      <div class="col mw-25 mr-1 shadow-sm p-4 bg-white rounded mobile-full">
+      <div
+        class="col mw-25 mr-1 shadow-sm pt-4 pl-4 bg-white rounded mobile-full"
+      >
         {% if forms.property_form.errors %}
         <div class="alert alert-danger text-center" role="alert">
           Please check the fields below
@@ -33,7 +35,7 @@
             {% endfor %}
           </div>
         </div>
-        <div class="row shadow-sm mb-2 p-4 bg-white rounded flex-column">
+        <div class="row shadow-sm p-4 bg-white rounded flex-column">
           <div class="col-sm-2 header">
             <h3>Mortgage</h3>
           </div>

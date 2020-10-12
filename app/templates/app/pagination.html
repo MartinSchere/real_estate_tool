@@ -1,0 +1,36 @@
+{% block pagination %} {% load paginate_filter %}
+<div class="pagination p-4">
+  <span class="step-links m-auto">
+    {% if page_obj.has_previous %}
+    <a
+      class="btn btn-outline-primary"
+      href="{% relative_url 1 'page' requests.GET.urlencode %}"
+      >first</a
+    >
+    <a
+      class="btn btn-outline-primary"
+      href="{% relative_url page_obj.previous_page_number 'page' requests.GET.urlencode %}"
+      >previous</a
+    >
+    {% endif %}
+
+    <span class="current ml-2 mr-2 font-weight-bold">
+      Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+    </span>
+
+    {% if page_obj.has_next %}
+    <a
+      class="btn btn-outline-primary"
+      href="{% relative_url page_obj.next_page_number 'page' requests.GET.urlencode %}"
+      >next</a
+    >
+    <a
+      class="btn btn-outline-primary"
+      href="{% relative_url page_obj.paginator.num_pages 'page' requests.GET.urlencode %}"
+      >last
+    </a>
+
+    {% endif %}
+  </span>
+</div>
+{% endblock pagination %}

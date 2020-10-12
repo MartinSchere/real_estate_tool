@@ -26,16 +26,31 @@ def percentage_validator(value):
             params={'value': value},
         )
 
+
+def term_validator(value):
+    if not (value > 0 and value <= 30):
+        raise ValidationError(
+            _('%(value)s must be between 0 and 30'),
+            params={'value': value},
+        )
+
+
 def credit_score_validator(value):
     if not (value >= 300 and value <= 850):
         raise ValidationError(
             _('Credit score must be between 300 and 850'),
             params={'value': value},
-        )  
+        )
 
 
 def reverse_geocode(coords):
     return rg.search((coords.lat, coords.lon))
+
+
+def is_image_available():
+    base_url = 'https://maps.googleapis.com/maps/api/streetview/metadata'
+    res = requests.get(base_url, params=PROPERTY_IMAGE_PARAMS)
+    return res.json()['status'] != 'ZERO_RESULTS'
 
 
 def get_property_image(prop, **params):
@@ -45,10 +60,11 @@ def get_property_image(prop, **params):
         assert k in PROPERTY_IMAGE_PARAMS.keys()
         PROPERTY_IMAGE_PARAMS[k] = v
 
-    res = google_streetview.api.results([PROPERTY_IMAGE_PARAMS])
-    base_url = 'https://maps.googleapis.com/maps/api/streetview'
-    try:
-        res = requests.get(base_url, params=PROPERTY_IMAGE_PARAMS)
-        return res.url
-    except:
-        return
+    if is_image_available():
+
+        base_url = 'https://maps.googleapis.com/maps/api/streetview'
+        try:
+            res = requests.get(base_url, params=PROPERTY_IMAGE_PARAMS)
+            return res.url
+        except:
+            return

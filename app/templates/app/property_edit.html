@@ -9,9 +9,15 @@
 <div class="jumbotron jumbotron-fluid rounded shadow-sm">
   <div class="container-fluid">
     {% if property.estimated_value %}
-    <h3 class="display-5">Estimated value: ${{property.estimated_value}}</h3>
+    <h4 class="display-5 font-weight-normal">
+      Estimated value: {{property.estimated_value}}
+    </h4>
     {% endif %}
-    <h1 class="display-5">Net cashflow: {{property.tenant.rent_payment}}</h1>
+    <h1 class="display-5 font-weight-normal">
+      Net cashflow /mo:
+      <!---->
+      {{property.get_net_cashflow}}
+    </h1>
   </div>
 </div>
 <div class="container-fluid p-0">
@@ -86,8 +92,11 @@
           {% if property.loan %}
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">{{ property.loan }}</h5>
-              <p class="card-text">Rent: {{property.loan}}</p>
+              <h5 class="card-title">{{property.loan.monthly_payment}}/mo</h5>
+              <p class="card-text">
+                {{ property.loan.get_loaned_amount }} financed at
+                {{property.loan.interest_rate}}%
+              </p>
               <a
                 href="{% url 'loan_edit' property.loan.id %}"
                 class="btn btn-primary"
