@@ -5,7 +5,7 @@ from django.db import IntegrityError
 from django.urls import reverse_lazy, reverse
 from django import forms
 
-from django.views.generic import ListView
+from django.views.generic import ListView, View
 from django_filters.views import FilterView
 from django.views.generic.edit import CreateView, UpdateView, FormView, DeleteView
 from django.contrib.messages.views import SuccessMessageMixin
@@ -107,6 +107,9 @@ class PropertyDeleteView(DeleteView, UserPassesTestMixin):
     def test_func(self):
         return self.request.user == self.get_object().user
 
+    def get(self, *args, **kwargs):
+        return self.post(*args, **kwargs)
+
 
 # LOANS
 
@@ -162,6 +165,24 @@ class TenantEditView(SuccessMessageMixin, UserPassesTestMixin, LoginRequiredMixi
 
     def test_func(self):
         return self.request.user == self.get_object().rental_property.user
+
+# EXPENSE TABLE
+
+
+class ExpenseTableView(View):
+    def get(self, request):
+        user_properties = Property.objects.filter(user=request.user)
+        mortgage_sum = sum(
+            (p.loan.monthly_payment for p in user_properties)
+        )
+        other_sum = sum(
+            (p.property_taxes + p.insurance for p in user_properties)
+        )
+        ctx = {
+            'properties': user_properties,
+            'total': mortgage_sum + other_sum
+        }
+        return render(request, 'app/expense_table.html', ctx)
 
 # SETTINGS
 

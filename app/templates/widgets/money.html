@@ -1,14 +1,11 @@
-{% load crispy_forms_tags %}
-<div class="row">
-  <div class="col-xs pt-1">
-    {% with widget=widget.subwidgets.1 %}$
-    <div class="d-none">{% include widget.template_name %}</div>
-    <!---->
-    {% endwith %}
+{% load crispy_forms_tags %} {% with widget=widget.subwidgets.1 %}
+<div class="d-none">{% include widget.template_name %}</div>
+{% endwith %}
+<div class="input-group">
+  <div class="input-group-prepend">
+    <div class="input-group-text">$</div>
   </div>
-  <div class="col" style="width: 90%">
-    {% with widget=widget.subwidgets.0 %} {% include widget.template_name %}
-    <!---->
-    {% endwith %}
-  </div>
+  {% with widget=widget.subwidgets.0 %} {% include widget.template_name %}
+  <!---->
+  {% endwith %}
 </div>

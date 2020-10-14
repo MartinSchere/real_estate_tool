@@ -1,0 +1,79 @@
+{% extends 'app/base.html' %} {% block content %}
+<div class="container-fluid mt-2">
+  <h3 class="mb-4">Expenses</h3>
+  <h4 class="font-weight-normal mb-3 text-center">Fixed expenses</h4>
+  <table class="table">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">Expense</th>
+        <th scope="col">Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for property in properties %}
+      <tr>
+        <th scope="row">
+          <a
+            data-toggle="collapse"
+            class="text-decoration-none arrowdown"
+            href="#collapse{{property.id}}"
+            role="button"
+            aria-expanded="false"
+            aria-controls="collapse{{property.id}}"
+          >
+            {{property.address}}
+          </a>
+          <div class="collapse" id="collapse{{property.id}}">
+            <table class="table-active mt-2">
+              {% if property.insurance %}
+              <tr>
+                <th scope="row">Insurance</th>
+                <td>{{property.insurance}}</td>
+              </tr>
+              {% endif %} {% if property.property_taxes %}
+              <tr>
+                <th scope="row">Property taxes</th>
+                <td>{{property.property_taxes}}</td>
+              </tr>
+              {% endif %}
+              <tr>
+                <th scope="row">Mortgage</th>
+                <td>{{property.loan.monthly_payment}}</td>
+              </tr>
+            </table>
+          </div>
+        </th>
+        <td>{{property.get_total_expenses}}</td>
+      </tr>
+      {% endfor %}
+      <tr class="table-secondary font-weight-bold">
+        <th scope="row">Total</th>
+        <td>{{total}}</td>
+      </tr>
+    </tbody>
+  </table>
+  <h4 class="font-weight-normal mb-3 text-center">This month</h4>
+  <table class="table">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">expense</th>
+        <th scope="col">amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">fixed expenses</th>
+        <td>{{total}}</td>
+      </tr>
+      <tr>
+        <th scope="row">2</th>
+        <td>jacob</td>
+      </tr>
+      <tr>
+        <th scope="row">3</th>
+        <td>larry</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+{% endblock content %}

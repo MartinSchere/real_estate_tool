@@ -7,6 +7,7 @@ $breakpoint-tablet: 1000px;
 
 body {
   height: 100vh;
+
   @media (max-width: $breakpoint-phone) {
     h5 {
       font-size: 1rem;

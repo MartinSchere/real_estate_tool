@@ -1,5 +1,6 @@
 import json
 from django import forms
+from django.forms import NumberInput
 from django.forms import inlineformset_factory
 
 from django.contrib.auth.models import User
@@ -13,6 +14,14 @@ from .models import Property, Loan, Tenant, Setting
 
 class CustomMoneyWidget(MoneyWidget):
     template_name = 'widgets/money.html'
+
+    def __init__(self, *args, **kwargs):
+        kwargs['attrs'] = {'type': 'number', 'class': 'form-control'}
+        super().__init__(*args, **kwargs)
+
+
+class PercentageWidget(NumberInput):
+    template_name = 'widgets/percentage.html'
 
 
 class UserRegisterForm(UserCreationForm):
@@ -28,7 +37,7 @@ class PropertyForm(forms.ModelForm):
     class Meta:
         model = Property
         fields = ['address', 'owned_since',
-                  'geolocation', 'bought_for', 'property_type']
+                  'geolocation', 'bought_for', 'property_type', 'insurance', 'property_taxes']
         widgets = {
             'address':  map_widgets.GoogleMapsAddressWidget(attrs={'data-map-type': 'roadmap', 'data-autocomplete-options': json.dumps({
                 'componentRestrictions': {'country': 'us'}
@@ -37,7 +46,9 @@ class PropertyForm(forms.ModelForm):
             'owned_since': forms.DateInput(attrs={
                 'placeholder': 'YYYY-MM-DD'
             }),
-            'bought_for': CustomMoneyWidget(attrs={'class': 'form-control'})
+            'bought_for': CustomMoneyWidget(),
+            'insurance': CustomMoneyWidget(),
+            'property_taxes': CustomMoneyWidget(),
         }
 
 
@@ -46,7 +57,8 @@ class LoanCreateForm(forms.ModelForm):
         model = Loan
         fields = ['interest_rate', 'term', 'down_payment']
         widgets = {
-            'down_payment': CustomMoneyWidget(attrs={'class': 'form-control'}),
+            'down_payment': CustomMoneyWidget(),
+            'interest_rate': PercentageWidget()
         }
 
     def __init__(self, *args, **kwargs):
@@ -59,7 +71,7 @@ class LoanEditForm(forms.ModelForm):
         model = Loan
         fields = ['rental_property', 'interest_rate', 'term', 'down_payment']
         widgets = {
-            'down_payment': CustomMoneyWidget(attrs={'class': 'form-control'}),
+            'down_payment': CustomMoneyWidget(),
         }
 
     def __init__(self, *args, **kwargs):
@@ -72,5 +84,5 @@ class TenantForm(forms.ModelForm):
         model = Tenant
         exclude = ('rental_property',)
         widgets = {
-            'rent_payment': CustomMoneyWidget(attrs={'class': 'form-control'}),
+            'rent_payment': CustomMoneyWidget(),
         }

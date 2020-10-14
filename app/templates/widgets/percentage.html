@@ -1,0 +1,13 @@
+{% load crispy_forms_tags %}
+<div class="input-group">
+  <div class="input-group-prepend">
+    <div class="input-group-text">%</div>
+  </div>
+  <input
+    class="{{widget.attrs.class}}"
+    id="{{ widget.attrs.id }}"
+    type="number"
+    step="any"
+    name="{{ widget.name }}"
+  />
+</div>

@@ -31,11 +31,20 @@ class Property(models.Model):
     property_type = models.CharField(choices=PROPERTY_CHOICES, max_length=2)
     bought_for = MoneyField(max_digits=20, decimal_places=2,
                             default_currency='USD', null=True, blank=True, help_text="Total value of the property at the moment of purchse")
-    estimated_value = MoneyField(max_digits=20, decimal_places=2,
-                                 default_currency='USD', null=True, blank=True)
+
     image_url = models.URLField(null=True)
     owned_since = models.DateField()
-    zpid = models.IntegerField(unique=True, null=True, blank=True)
+    property_taxes = MoneyField(max_digits=20, decimal_places=2,
+                                default_currency='USD', null=True, blank=True, help_text="per month")
+    insurance = MoneyField(max_digits=20, decimal_places=2,
+                           default_currency='USD', null=True, blank=True, help_text="per month")
+    # Zillow fields
+    zpid = models.IntegerField(null=True, blank=True)
+    zillow_url = models.URLField(null=True, blank=True)
+    rental_estimated_value = MoneyField(max_digits=20, decimal_places=2,
+                                        default_currency='USD', null=True, blank=True)
+    estimated_value = MoneyField(max_digits=20, decimal_places=2,
+                                 default_currency='USD', null=True, blank=True)
 
     def save(self, *args, **kwargs):
         self.estimated_value = get_estimated_value(self)
@@ -47,7 +56,10 @@ class Property(models.Model):
         return reverse("property_edit", kwargs={"pk": self.pk})
 
     def get_net_cashflow(self):
-        return self.tenant.rent_payment - self.loan.monthly_payment
+        return self.tenant.monthly_payment - (self.loan.monthly_payment + self.insurance + self.property_taxes)
+
+    def get_total_expenses(self):
+        return self.loan.monthly_payment + self.insurance + self.property_taxes
 
     class Meta:
         verbose_name_plural = 'properties'
@@ -114,3 +126,12 @@ class Setting(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Expense(models.Model):
+    prop = models.OneToOneField(
+        Property, on_delete=models.CASCADE, null=True, blank=True)
+    name = models.CharField(max_length=30)
+    date = models.DateField(blank=True, null=True, auto_now=True)
+    amount = MoneyField(max_digits=20, decimal_places=2,
+                        default_currency='USD', null=True, blank=True)

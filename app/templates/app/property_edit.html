@@ -6,18 +6,25 @@
   Please check the fields below
 </div>
 {% endif %}
-<div class="jumbotron jumbotron-fluid rounded shadow-sm">
+<div class="jumbotron jumbotron-fluid py-4 rounded shadow-sm">
   <div class="container-fluid">
-    {% if property.estimated_value %}
-    <h4 class="display-5 font-weight-normal">
-      Estimated value: {{property.estimated_value}}
-    </h4>
-    {% endif %}
-    <h1 class="display-5 font-weight-normal">
+    <h1 class="display-">
       Net cashflow /mo:
       <!---->
       {{property.get_net_cashflow}}
     </h1>
+    {% if property.estimated_value %}
+    <h5 class="display-5 font-weight-normal">
+      Estimated value: {{property.estimated_value}}
+    </h5>
+    {% endif %} {% if property.rental_estimated_value %}
+    <h5 class="display-5 font-weight-normal">
+      Estimated value (rental/mo): {{property.rental_estimated_value}}
+    </h5>
+    {% endif %}<!---->
+    {% if not property.estimated_value or not property.rental_estimated_value %}
+    <h5 class="display-5 text-muted">No estimations available</h5>
+    {% endif %}
   </div>
 </div>
 <div class="container-fluid p-0">
@@ -33,20 +40,13 @@
         </div>
         {% endfor %}
         <div class="text-center">
-          <form
-            class="text-center"
-            action="{% url 'property_delete' property.id %}"
-            method="POST"
+          <a
+            href="{% url 'property_delete' property.id %}"
+            class="btn btn-danger"
+            onclick="return confirm('Are you sure you want to delete this property?');"
           >
-            {% csrf_token %}
-            <button
-              type="submit"
-              class="btn btn-danger"
-              onclick="return confirm('Are you sure you want to delete this property?');"
-            >
-              Delete
-            </button>
-          </form>
+            Delete
+          </a>
           <input type="submit" value="Save" class="btn btn-primary" />
         </div>
       </form>
@@ -83,7 +83,7 @@
       </div>
       <div
         class="row shadow-sm mb-2 p-4 bg-white rounded flex-column"
-        style="height: 48%"
+        style="height: 48.7%"
       >
         <div class="col-sm-2 header">
           <h3>Mortgage</h3>
@@ -114,6 +114,9 @@
       </div>
     </div>
   </div>
+  <p class="text-muted text-right">
+    data provided by <a href="https://www.zillow.com/"> zillow.com</a>
+  </p>
 </div>
 
 {% endblock content %}
