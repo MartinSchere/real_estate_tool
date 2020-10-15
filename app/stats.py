@@ -17,9 +17,9 @@ class UserStats:
             if hasattr(p, 'tenant'):
                 res += p.tenant.rent_payment
             if hasattr(p, 'property_taxes'):
-                res += p.property_taxes
+                res -= p.property_taxes
             if hasattr(p, 'insurance'):
-                res += p.insurance
+                res -= p.insurance
         return res
 
     @property
@@ -34,3 +34,19 @@ class UserStats:
                 res += p.bought_for
 
         return res
+
+    @property
+    def total_taxes(self):
+        return sum((p.property_taxes for p in self.user_properties))
+
+    @property
+    def total_home_insurance(self):
+        return sum((p.insurance for p in self.user_properties))
+
+    @property
+    def total_mortgage(self):
+        return sum((p.loan.monthly_payment for p in self.user_properties))
+
+    @property
+    def total_rent(self):
+        return sum((p.tenant.rent_payment for p in self.user_properties))

@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import views as auth_views
 from django.db import IntegrityError
@@ -44,6 +45,21 @@ def index(request):
     }
     return render(request, 'app/index.html', ctx)
 
+
+@login_required
+def chart_data_api(request):
+    ctx = {
+        'labels': [],
+        'data': []
+    }
+    for p in Property.objects.filter(user=request.user):
+        print(p)
+        ctx['labels'] += p.address.split(",")[0],
+        ctx['data'].append(p.get_net_cashflow().amount)
+
+    return JsonResponse(ctx)
+
+
 # PROPERTIES
 
 
@@ -87,7 +103,7 @@ class PropertyEditView(SuccessMessageMixin, UserPassesTestMixin, UpdateView):
 
     def get_object(self, *args):
         obj = super().get_object()
-        #obj.estimated_value = get_estimated_value(obj)
+        # obj.estimated_value = get_estimated_value(obj)
         # if obj.estimated_value != None:
         #    obj.save()
         return obj

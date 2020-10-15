@@ -7,7 +7,15 @@ $breakpoint-tablet: 1000px;
 
 body {
   height: 100vh;
-
+  .arrowdown {
+    color: black;
+    &::before {
+      content: "▸";
+    }
+    &[aria-expanded="true"]::before {
+      content: "▾";
+    }
+  }
   @media (max-width: $breakpoint-phone) {
     h5 {
       font-size: 1rem;

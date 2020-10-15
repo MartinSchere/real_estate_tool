@@ -1,5 +1,18 @@
+@charset "UTF-8";
 body {
   height: 100vh;
+}
+
+body .arrowdown {
+  color: black;
+}
+
+body .arrowdown::before {
+  content: "▸";
+}
+
+body .arrowdown[aria-expanded="true"]::before {
+  content: "▾";
 }
 
 @media (max-width: 768px) {

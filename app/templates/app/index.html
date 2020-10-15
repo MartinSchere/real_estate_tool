@@ -1,19 +1,26 @@
-{% extends 'app/base.html' %} {% block content %}
+{% extends 'app/base.html' %} {% load static %}{% block content %}
 
 <div class="bg-white shadow-sm mb-2 rounded">
   <div class="card-header d-flex">
     <h5 style="line-height: 1.5">Income</h5>
   </div>
-  <div class="container-fluid p-4">
-    <h2 class="font-weight-normal">Net/mo: {{stats.monthly_net_income}}</h2>
+  <div class="container-fluid p-4 mb-4">
+    <div class="row">
+      <div class="col-md-6 col-xl-3">
+        <canvas id="incomeChart" class="text-left"></canvas>
+      </div>
+      <div class="col-6">
+        <h2 class="font-weight-normal">Net/mo: {{stats.monthly_net_income}}</h2>
+      </div>
+    </div>
     <hr />
     <h2 class="font-weight-normal">
       {{stats.gross_worth}}
       <small class="text-muted"> worth of real estate </small>
     </h2>
-    <p class="lead"></p>
   </div>
 </div>
+
 <div class="shadow-sm mb-2 rounded">
   <div class="card-header d-flex">
     <h5 style="line-height: 1.5">My properties</h5>
@@ -49,4 +56,7 @@
   </div>
 </div>
 
-{% endblock content %}
+{% endblock content %} {% block script %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+<script src="{% static 'js/charts.js' %}"></script>
+{% endblock script %}

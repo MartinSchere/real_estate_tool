@@ -56,7 +56,7 @@ class Property(models.Model):
         return reverse("property_edit", kwargs={"pk": self.pk})
 
     def get_net_cashflow(self):
-        return self.tenant.monthly_payment - (self.loan.monthly_payment + self.insurance + self.property_taxes)
+        return self.tenant.rent_payment - (self.loan.monthly_payment + self.insurance + self.property_taxes)
 
     def get_total_expenses(self):
         return self.loan.monthly_payment + self.insurance + self.property_taxes
