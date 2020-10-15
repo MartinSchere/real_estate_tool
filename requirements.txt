@@ -124,7 +124,6 @@ pyOpenSSL==19.0.0
 pyparsing==2.4.7
 pyrsistent==0.15.5
 pyserial==3.4
-python-apt==2.0.0
 python-dateutil==2.8.1
 python-magic==0.4.18
 python-telegram-bot==12.8
