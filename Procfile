@@ -1,2 +1,2 @@
 web: gunicorn real_estate_tool.wsgi
-release: python manage.py migratee
+release: python manage.py migrate
