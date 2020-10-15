@@ -21,7 +21,7 @@ cffi==1.14.1
 chardet==3.0.4
 clarifai==2.6.2
 click==7.1.2
-cloud-init==20.1
+cloud-init==20.3
 colorama==0.4.3
 command-not-found==0.3
 configobj==5.0.6
