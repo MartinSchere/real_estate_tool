@@ -1,10 +1,11 @@
 from decimal import Decimal
-
+from datetime import date
 from mortgage import Loan as LoanCalc
 
 from django.db import models
 from django.conf import settings
 
+from djmoney.money import Money
 from djmoney.models.fields import MoneyField
 from django_google_maps import fields as map_fields
 
@@ -80,14 +81,38 @@ class Loan(models.Model):
     monthly_payment = MoneyField(max_digits=20, decimal_places=2,
                                  default_currency='USD')
 
+    start_date = models.DateField()
+
     def get_loaned_amount(self):
-        return self.rental_property.bought_for - self.down_payment
+        return (self.rental_property.bought_for - self.down_payment).amount
+
+    def calculate(self):
+        principal = self.get_loaned_amount()
+
+        return LoanCalc(principal=principal,
+                        interest=(self.interest_rate/100), term=self.term)
+
+    def get_paid_months(self):
+        diff = (date.today().year - self.start_date.year) * \
+            12 + (date.today().month - self.start_date.month)
+        return diff
+
+    def get_total_equity(self):
+        mortgage_balance = self.calculate().total_principal - (self.get_paid_months()
+                                                               * self.monthly_payment.amount)
+        return Money(self.rental_property.estimated_value.amount - mortgage_balance, 'USD')
+
+    def get_equity_percentage(self):
+        mortgage_balance = self.calculate().total_principal - (self.get_paid_months()
+                                                               * self.monthly_payment.amount)
+        return round(self.get_total_equity()/self.rental_property.estimated_value * 100, 2)
+
+    def get_monthly_equity(self):
+        pass  # Calculate how much equity is received p/mo
 
     def save(self, *args, **kwargs):
-        principal = self.get_loaned_amount().amount
-        loan_obj = LoanCalc(principal=principal,
-                            interest=(self.interest_rate/100), term=self.term)
-        self.monthly_payment = loan_obj.monthly_payment
+        print(self.get_monthly_equity())
+        self.monthly_payment = self.calculate().monthly_payment
         return super().save(*args, **kwargs)
 
     def get_absolute_url(self):
