@@ -37,7 +37,7 @@ class PropertyForm(forms.ModelForm):
     class Meta:
         model = Property
         fields = ['address', 'owned_since',
-                  'geolocation', 'bought_for', 'property_type', 'insurance', 'property_taxes']
+                  'geolocation', 'bought_for', 'estimated_value', 'property_type', 'insurance', 'property_taxes']
         widgets = {
             'address':  map_widgets.GoogleMapsAddressWidget(attrs={'data-map-type': 'roadmap', 'data-autocomplete-options': json.dumps({
                 'componentRestrictions': {'country': 'us'}
@@ -47,6 +47,7 @@ class PropertyForm(forms.ModelForm):
                 'placeholder': 'YYYY-MM-DD'
             }),
             'bought_for': CustomMoneyWidget(),
+            'estimated_value': CustomMoneyWidget(),
             'insurance': CustomMoneyWidget(),
             'property_taxes': CustomMoneyWidget(),
         }

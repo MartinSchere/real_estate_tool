@@ -10,14 +10,25 @@
         <canvas id="incomeChart" class="text-left"></canvas>
       </div>
       <div class="col-6">
-        <h2 class="font-weight-normal">Net/mo: {{stats.monthly_net_income}}</h2>
+        <h2 class="font-weight-normal d-inline">
+          Net/mo: {{stats.monthly_net_income}}
+        </h2>
+        <br />
+        <h2 class="font-weight-normal d-inline">
+          Total equity: {{stats.gross_worth}}
+        </h2>
+        {% comment '' %}
+        <small class="text-muted">(equity included)</small>
+        {% endcomment %}
       </div>
     </div>
+    {% comment '' %}
     <hr />
     <h2 class="font-weight-normal">
       {{stats.gross_worth}}
       <small class="text-muted"> worth of real estate </small>
     </h2>
+    {% endcomment %}
   </div>
 </div>
 
@@ -58,5 +69,5 @@
 
 {% endblock content %} {% block script %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
-<script src="{% static 'js/charts.js' %}"></script>
+<script src="{% static 'js/index-charts.js' %}"></script>
 {% endblock script %}

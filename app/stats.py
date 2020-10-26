@@ -20,18 +20,19 @@ class UserStats:
                 res -= p.property_taxes
             if hasattr(p, 'insurance'):
                 res -= p.insurance
+
         return res
 
     @property
     def gross_worth(self):
 
-        res = Money(0, 'USD')
+        res = 0
 
         for p in self.user_properties:
-            if hasattr(p, 'estimated_value'):
-                res += p.estimated_value
+            if hasattr(p, 'loan'):
+                res += p.loan.get_total_equity()
             else:
-                res += p.bought_for
+                res += p.bought_for.amount
 
         return res
 

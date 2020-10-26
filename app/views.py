@@ -47,15 +47,28 @@ def index(request):
 
 
 @login_required
-def chart_data_api(request):
+def chart_data_api(request, chart):
     ctx = {
         'labels': [],
         'data': []
     }
-    for p in Property.objects.filter(user=request.user):
-        print(p)
-        ctx['labels'] += p.address.split(",")[0],
-        ctx['data'].append(p.get_net_cashflow().amount)
+    user_properties = Property.objects.filter(user=request.user)
+    if chart == "income-chart":
+        for p in user_properties:
+            ctx['labels'] += p.address.split(",")[0],
+            # appending because of TypeError
+            ctx['data'].append(p.get_net_cashflow().amount)
+
+    if chart == "total-expense-chart":
+        ctx['labels'] += ['Property taxes', 'Mortgage', 'Insurance']
+        ctx['data'] += [sum((p.property_taxes for p in user_properties)).amount,
+                        sum((p.loan.monthly_payment for p in user_properties)).amount,
+                        sum((p.insurance for p in user_properties)).amount]
+
+    if chart == "property-expenses-chart":
+        for p in user_properties:
+            ctx['labels'] += p.address.split(",")[0],
+            ctx['data'].append(p.get_total_expenses().amount)
 
     return JsonResponse(ctx)
 
@@ -100,13 +113,6 @@ class PropertyEditView(SuccessMessageMixin, UserPassesTestMixin, UpdateView):
     success_message = 'Changes saved successfully'
     form_class = PropertyForm
     template_name = "app/property_edit.html"
-
-    def get_object(self, *args):
-        obj = super().get_object()
-        # obj.estimated_value = get_estimated_value(obj)
-        # if obj.estimated_value != None:
-        #    obj.save()
-        return obj
 
     def form_valid(self, form):
         form.instance.image_url = get_property_image(form.instance)

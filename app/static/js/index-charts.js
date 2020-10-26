@@ -3,13 +3,12 @@ $(document).ready(function () {
 
   $.ajax({
     method: "GET",
-    url: "/api/chart-data",
+    url: "/api/chart-data/income-chart",
     async: false,
   }).done(function (res) {
     data = res;
   });
 
-  console.log(data);
   var ctx1 = $("#incomeChart");
   var incomeChart = new Chart(ctx1, {
     type: "doughnut",

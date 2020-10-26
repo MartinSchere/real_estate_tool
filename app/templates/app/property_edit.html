@@ -17,11 +17,17 @@
     <h5 class="display-5 font-weight-normal">
       Estimated value: {{property.estimated_value}}
     </h5>
-    {% endif %} {% if property.rental_estimated_value %}
+    {% endif %}
+    <h5 class="display-5 font-weight-normal">
+      Equity: {{property.loan.get_total_equity}}
+      <small> ({{property.loan.get_equity_percentage}}% of the property)</small>
+    </h5>
+    {% if property.rental_estimated_value %}
     <h5 class="display-5 font-weight-normal">
       Estimated value (rental/mo): {{property.rental_estimated_value}}
     </h5>
     {% endif %}<!---->
+
     {% if not property.estimated_value or not property.rental_estimated_value %}
     <h5 class="display-5 text-muted">No estimations available</h5>
     {% endif %}
@@ -53,6 +59,49 @@
     </div>
     <div class="col ml-1" style="width: 49%">
       <div
+        class="row shadow-sm mb-2 p-4 bg-white rounded"
+        style="height: 48.7%"
+      >
+        <h3>Mortgage</h3>
+
+        <div class="container">
+          {% if property.loan %}
+          <div class="bg-light py-2 my-2">
+            <h3 class="display-5">{{property.loan.monthly_payment}}/mo</h3>
+            <p class="text-muted m-0">
+              {{ property.loan.get_loaned_amount }} financed at
+              {{property.loan.interest_rate}}%
+            </p>
+          </div>
+          <p class="">APR: {{ property.loan.calculate.apr }}%</p>
+          <p class="">APY: {{ property.loan.calculate.apy }}%</p>
+          <p class="">
+            Total principal payments:
+            <!---->${{ property.loan.calculate.total_principal }}
+          </p>
+          <p class="">
+            Total interest payments:
+            <!---->${{ property.loan.calculate.total_interest }}
+          </p>
+          <p class="">
+            Interest to principal:
+            <!---->{{ property.loan.calculate.interest_to_principle }}%
+          </p>
+
+          <a
+            href="{% url 'loan_edit' property.loan.id %}"
+            class="btn btn-primary"
+            >Edit</a
+          >
+          {% else %}
+          <h5 class="text-muted mb-3">
+            This property has no mortgage<br />
+            <a href="{% url 'loan_create' %}">add mortgage</a>
+          </h5>
+          {% endif %}
+        </div>
+      </div>
+      <div
         class="row shadow-sm mb-2 p-4 bg-white rounded flex-column"
         style="height: 48%"
       >
@@ -77,37 +126,6 @@
           <h5 class="text-muted mb-3">
             This property is currently vacant... <br />
             <a href="{% url 'tenant_create' %}">add tenant</a>
-          </h5>
-          {% endif %}
-        </div>
-      </div>
-      <div
-        class="row shadow-sm mb-2 p-4 bg-white rounded flex-column"
-        style="height: 48.7%"
-      >
-        <div class="col-sm-2 header">
-          <h3>Mortgage</h3>
-        </div>
-        <div class="col d-flex align-items-center">
-          {% if property.loan %}
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">{{property.loan.monthly_payment}}/mo</h5>
-              <p class="card-text">
-                {{ property.loan.get_loaned_amount }} financed at
-                {{property.loan.interest_rate}}%
-              </p>
-              <a
-                href="{% url 'loan_edit' property.loan.id %}"
-                class="btn btn-primary"
-                >Edit</a
-              >
-            </div>
-          </div>
-          {% else %}
-          <h5 class="text-muted mb-3">
-            This property has no mortgage<br />
-            <a href="{% url 'loan_create' %}">add mortgage</a>
           </h5>
           {% endif %}
         </div>

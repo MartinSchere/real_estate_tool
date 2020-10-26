@@ -45,7 +45,7 @@ class Property(models.Model):
     rental_estimated_value = MoneyField(max_digits=20, decimal_places=2,
                                         default_currency='USD', null=True, blank=True)
     estimated_value = MoneyField(max_digits=20, decimal_places=2,
-                                 default_currency='USD', null=True, blank=True)
+                                 default_currency='USD', null=True, blank=True, help_text="Value generated automatically by zillow, but you can edit freely")
 
     def save(self, *args, **kwargs):
         self.estimated_value = get_estimated_value(self)

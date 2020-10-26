@@ -1,6 +1,13 @@
-{% extends 'app/base.html' %} {% block content %}
+{% extends 'app/base.html' %} {% load static %}{% block content %}
 <div class="container-fluid mt-2">
-  <h3 class="mb-4">Expenses</h3>
+  <div class="row justify-content-center m-0 p-3 bg-white shadow-sm mb-4">
+    <div class="col-lg-4">
+      <canvas id="expenseChart" class="text-left"></canvas>
+    </div>
+    <div class="col-lg-4">
+      <canvas id="propertyExpensesChart" class="text-left"></canvas>
+    </div>
+  </div>
   <h4 class="font-weight-normal mb-3 text-center">Fixed expenses</h4>
   <table class="table">
     <thead class="thead-light">
@@ -72,4 +79,7 @@
     </tbody>
   </table>
 </div>
-{% endblock content %}
+{% endblock content %} {% block script %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+<script src="{% static 'js/expense-charts.js' %}"></script>
+{% endblock script %}
