@@ -27,7 +27,6 @@ class TestApis(SimpleTestCase):
             res = requests.get(API_URLS['GetZestimate'], params={
                 'access_token': settings.ZILLOW_ACCESS_TOKEN, 'address': address
             })
-            print(res.text)
             self.assertEquals(res.json()['success'], True)
 
     def test_google_maps_streetview(self):
