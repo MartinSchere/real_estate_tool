@@ -67,7 +67,7 @@ body .container-fluid .property-image {
 
 body .container-fluid .property-card:hover {
   cursor: pointer;
-  background-color: #ececec;
+  background-color: whitesmoke;
   -webkit-transition: 0.4s;
   transition: 0.4s;
 }
@@ -161,14 +161,4 @@ body .container-fluid .navbar-brand {
 #id_credit_score {
   width: 20%;
 }
-
-.form-card {
-  -webkit-transition: 0.5s;
-  transition: 0.5s;
-  cursor: pointer;
-}
-
-.form-card:hover {
-  background-color: #ececec !important;
-}
-/*# sourceMappingURL=base.css.map */
+/*# sourceMappingURL=base.099518bd807c.css.map */

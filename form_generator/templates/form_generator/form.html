@@ -1,3 +1,10 @@
-{% extends 'form_generator/base.html' %} {% block content %}
-<div class="container"></div>
+{% extends 'form_generator/base.html' %} {% load crispy_forms_tags %}
+<!---->
+{% block content %}
+<div class="container mt-2">
+  <form method="POST">
+    {% csrf_token %} {{form.applicant_form|crispy}}
+    <input type="submit" value="Submit" class="btn btn-primary" />
+  </form>
+</div>
 {% endblock content %}

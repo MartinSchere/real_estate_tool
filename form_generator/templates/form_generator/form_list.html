@@ -1,18 +1,26 @@
-{% extends 'app/base.html' %} {% block content %}
-<div class="container mt-1 bg-white shadow-sm p-4">
-  <h1 class="display-5 font-weight-normal">Form creator</h1>
-  {% for form in forms %}
-  <div onclick="location.href='{% url 'form_edit' form.id %}'">
-    <h3 class="card-header">{{form.name}}</h3>
+{% extends 'app/base.html' %} {% load crispy_forms_tags %} {% block content %}
+<div class="container mt-1 bg-white shadow-sm p-0">
+  <h2 class="display-5 font-weight-normal card-header">Form creator</h2>
+  <div class="p-4">
+    <h4 class="font-weight-normal mb-3">Your forms</h4>
+    {% for form in forms %}
+    <div
+      class="form-card py-2 pl-1 bg-light mb-1"
+      onclick="location.href='{% url 'form_edit' form.id %}'"
+    >
+      <h3 class="">{{form.name}}</h3>
+    </div>
+    {% empty %}
+    <h5 class="font-weight-normal my-4 text-muted">
+      You haven't created any forms yet...
+    </h5>
+    {% endfor %}
+    <hr />
+    <form action="{% url 'form_create' %}" class="mt-2 col-6 p-0" method="POST">
+      <h4 class="font-weight-normal">Add a new form</h4>
+      {% csrf_token %} {{form|crispy}}
+      <input type="submit" value="Create" class="btn btn-primary" />
+    </form>
   </div>
-
-  {% empty %}
-  <h5>You haven't created any forms yet...</h5>
-  {% endfor %}
-  <form action="{% url 'form_create' %}" method="POST">
-    {% csrf_token %}
-    <input type="text" name="name" id="" />
-    <input type="submit" value="create" />
-  </form>
 </div>
 {% endblock content %}

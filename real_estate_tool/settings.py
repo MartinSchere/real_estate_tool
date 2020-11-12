@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'djmoney',
     'django_google_maps',
+    'dynamic_formsets',
     'crispy_forms',
     'django_filters',
     'user_settings',
