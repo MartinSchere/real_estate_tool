@@ -19,14 +19,15 @@ def get_estimated_value(prop):
         'access_token': settings.ZILLOW_ACCESS_TOKEN,
         'address': address,
     })
-    data = res.json()['bundle'][0]
+    data = res.json()['bundle'][0] if len(res.json()['bundle']) > 0 else None
 
     # Set everything retrieved from the API
-    prop.zpid = data['zpid']
-    prop.zillow_url = data['zillowUrl']
-    prop.rental_estimated_value = data['rental']['zestimate']
+    if data:
+        prop.zpid = data['zpid']
+        prop.zillow_url = data['zillowUrl']
+        prop.rental_estimated_value = data['rental']['zestimate']
 
-    zestimate = data['zestimate'] if len(
-        res.json()['bundle']) > 0 else None
+        zestimate = data['zestimate'] if len(
+            res.json()['bundle']) > 0 else None
 
-    return zestimate
+        return zestimate

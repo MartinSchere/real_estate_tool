@@ -14,4 +14,5 @@ if not settings.PRE_LAUNCH_MODE:
         path('accounts/', include('django.contrib.auth.urls')),
         path('register/', views.SignUpView.as_view(), name="register"),
         path('', include('app.urls')),
+        path('form_generator/', include('form_generator.urls'))
     ]

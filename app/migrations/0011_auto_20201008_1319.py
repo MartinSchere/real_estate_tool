@@ -2,6 +2,7 @@
 
 from django.db import migrations, models
 
+import app.utils
 
 class Migration(migrations.Migration):
 
@@ -25,6 +26,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='loan',
             name='term',
-            field=models.DurationField(null=True),
-        ),
-    ]
+            field=models.IntegerField(null=True, validators=[app.utils.term_validator]),
+            ),
+        ]

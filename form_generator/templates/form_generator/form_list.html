@@ -1,0 +1,18 @@
+{% extends 'app/base.html' %} {% block content %}
+<div class="container mt-1 bg-white shadow-sm p-4">
+  <h1 class="display-5 font-weight-normal">Form creator</h1>
+  {% for form in forms %}
+  <div onclick="location.href='{% url 'form_edit' form.id %}'">
+    <h3 class="card-header">{{form.name}}</h3>
+  </div>
+
+  {% empty %}
+  <h5>You haven't created any forms yet...</h5>
+  {% endfor %}
+  <form action="{% url 'form_create' %}" method="POST">
+    {% csrf_token %}
+    <input type="text" name="name" id="" />
+    <input type="submit" value="create" />
+  </form>
+</div>
+{% endblock content %}

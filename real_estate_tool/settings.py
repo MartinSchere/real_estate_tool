@@ -11,6 +11,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'landing',
+    'form_generator',
     'app',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -23,6 +24,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'django_filters',
     'user_settings',
+    'phonenumber_field',
 ]
 
 MIDDLEWARE = [

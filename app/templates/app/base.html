@@ -16,7 +16,8 @@
       crossorigin="anonymous"
     />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    {{ form.media }} {{ forms.property_form.media}}
+
+    {{ form.media }}{{ forms.property_form.media}}
     <link rel="stylesheet" href="{% static 'css/base.css' %}" />
   </head>
   <body>
@@ -40,5 +41,10 @@
     integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
     crossorigin="anonymous"
   ></script>
+  <script src='{% static "dynamic_formsets/jquery.formset.js" %}'></script>
+  <script>
+    $(".individual-form").formset();
+    console.log($(".individual-form"));
+  </script>
   {% block script %} {% endblock script %}
 </html>

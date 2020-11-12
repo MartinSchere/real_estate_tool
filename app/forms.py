@@ -9,7 +9,7 @@ from django.contrib.auth.forms import UserCreationForm
 from djmoney.forms.widgets import MoneyWidget
 from django_google_maps import widgets as map_widgets
 
-from .models import Property, Loan, Tenant, Setting
+from .models import Property, Loan, Tenant
 
 
 class CustomMoneyWidget(MoneyWidget):

@@ -7,6 +7,7 @@ from django.conf import settings
 
 from djmoney.money import Money
 from djmoney.models.fields import MoneyField
+from phonenumber_field.modelfields import PhoneNumberField
 from django_google_maps import fields as map_fields
 
 from django.contrib.auth.models import User
@@ -48,13 +49,10 @@ class Property(models.Model):
                                  default_currency='USD', null=True, blank=True, help_text="Value generated automatically by zillow, but you can edit freely")
 
     def save(self, *args, **kwargs):
-        self.estimated_value = get_estimated_value(self)
-
+        if not self.estimated_value:
+            self.estimated_value = get_estimated_value(self)
         self.image_url = get_property_image(self)
         return super().save(*args, **kwargs)
-
-    def get_absolute_url(self):
-        return reverse("property_edit", kwargs={"pk": self.pk})
 
     def get_net_cashflow(self):
         return self.tenant.rent_payment - (self.loan.monthly_payment + self.insurance + self.property_taxes)
@@ -62,12 +60,15 @@ class Property(models.Model):
     def get_total_expenses(self):
         return self.loan.monthly_payment + self.insurance + self.property_taxes
 
-    class Meta:
-        verbose_name_plural = 'properties'
-        ordering = ['id']
+    def get_absolute_url(self):
+        return reverse("property_edit", kwargs={"pk": self.pk})
 
     def __str__(self):
         return str(self.address)
+
+    class Meta:
+        verbose_name_plural = 'properties'
+        ordering = ['id']
 
 
 class Loan(models.Model):
@@ -81,8 +82,6 @@ class Loan(models.Model):
     monthly_payment = MoneyField(max_digits=20, decimal_places=2,
                                  default_currency='USD')
 
-    start_date = models.DateField()
-
     def get_loaned_amount(self):
         return (self.rental_property.bought_for - self.down_payment).amount
 
@@ -93,25 +92,25 @@ class Loan(models.Model):
                         interest=(self.interest_rate/100), term=self.term)
 
     def get_paid_months(self):
-        diff = (date.today().year - self.start_date.year) * \
-            12 + (date.today().month - self.start_date.month)
+        diff = (date.today().year - self.rental_property.owned_since.year) * \
+            12 + (date.today().month - self.rental_property.owned_since.month)
         return diff
 
     def get_total_equity(self):
-        mortgage_balance = self.calculate().total_principal - (self.get_paid_months()
-                                                               * self.monthly_payment.amount)
-        return Money(self.rental_property.estimated_value.amount - mortgage_balance, 'USD')
+        """B = (PMT/R) x (1 - (1/(1+R)^N)"""
+        loan = self.calculate()
+        remaining_months = self.term * 12 - self.get_paid_months()
+        PMT = self.monthly_payment
+        R = Decimal((self.interest_rate/100)/12)
+        N = remaining_months
 
-    def get_equity_percentage(self):
-        mortgage_balance = self.calculate().total_principal - (self.get_paid_months()
-                                                               * self.monthly_payment.amount)
-        return round(self.get_total_equity()/self.rental_property.estimated_value * 100, 2)
+        balance = (PMT/R) * (1 - (1/(1+R) ** N))
+        return self.rental_property.estimated_value - balance
 
     def get_monthly_equity(self):
-        pass  # Calculate how much equity is received p/mo
+        pass  # Calculate how much equity is received p/mo by paying down the loan
 
     def save(self, *args, **kwargs):
-        print(self.get_monthly_equity())
         self.monthly_payment = self.calculate().monthly_payment
         return super().save(*args, **kwargs)
 
@@ -127,6 +126,8 @@ class Tenant(models.Model):
     name = models.CharField(max_length=30)
     rent_payment = MoneyField(max_digits=20, decimal_places=2,
                               default_currency='USD')
+    phone_number = PhoneNumberField(null=True, blank=True)
+    email = models.EmailField(null=True, blank=True)
 
     def get_absolute_url(self):
         return reverse("tenant_edit", kwargs={"pk": self.pk})
@@ -142,15 +143,6 @@ class Renovation(models.Model):
 
     def __str__(self):
         return f'{self.cost} renovation for {self.property_renovated}'
-
-
-class Setting(models.Model):
-    user = models.ManyToManyField(User, related_name="settings")
-    name = models.CharField(max_length=50)
-    enabled = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.name
 
 
 class Expense(models.Model):

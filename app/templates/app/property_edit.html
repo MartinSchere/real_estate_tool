@@ -20,7 +20,6 @@
     {% endif %}
     <h5 class="display-5 font-weight-normal">
       Equity: {{property.loan.get_total_equity}}
-      <small> ({{property.loan.get_equity_percentage}}% of the property)</small>
     </h5>
     {% if property.rental_estimated_value %}
     <h5 class="display-5 font-weight-normal">
@@ -75,10 +74,7 @@
           </div>
           <p class="">APR: {{ property.loan.calculate.apr }}%</p>
           <p class="">APY: {{ property.loan.calculate.apy }}%</p>
-          <p class="">
-            Total principal payments:
-            <!---->${{ property.loan.calculate.total_principal }}
-          </p>
+
           <p class="">
             Total interest payments:
             <!---->${{ property.loan.calculate.total_interest }}

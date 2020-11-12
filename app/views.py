@@ -16,7 +16,7 @@ from django.contrib.auth.models import User
 
 from multi_form_view import MultiFormView, MultiModelFormView
 
-from .models import Property, Loan, Tenant, Setting
+from .models import Property, Loan, Tenant
 from .forms import UserRegisterForm, LoanCreateForm, LoanEditForm, PropertyForm, TenantForm
 from .user_settings import PropertyFilterSetting, CreditScoreSetting
 from .filters import PropertyFilter, PropertyFilterWithoutTenant
@@ -80,6 +80,9 @@ class PropertyListView(LoginRequiredMixin, FilterView):
     template_name = 'app/property_list.html'
     context_object_name = 'properties'
     paginate_by = 5
+
+    def get_queryset(self):
+        return Property.objects.filter(user=self.request.user)
 
     def get_filterset_class(self):
         return PropertyFilterWithoutTenant if not get_user_setting('filter_by_tenants', request=self.request)['value'] else PropertyFilter

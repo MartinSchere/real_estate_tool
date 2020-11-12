@@ -1,12 +1,15 @@
 from datetime import date
+
 from django.test import Client, TestCase
 from django.urls import reverse
 from django.contrib.auth.models import AnonymousUser, User
+
 from app.models import Property, Tenant
 
 
 class TestClient(TestCase):
     def setUp(self):
+        
         self.client = Client()
         self.mock_user = User.objects.create_user(
             username='jamesj1231',
@@ -28,7 +31,6 @@ class TestClient(TestCase):
         }
 
     def test_auth(self):
-
         res = self.client.get('')
         self.assertEquals(res.status_code, 302)
 
