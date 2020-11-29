@@ -11,14 +11,16 @@
         <h4 class="font-weight-normal">Fields</h4>
         {% csrf_token %} {{ formset.management_form }}
         <!---->
-        {% for field in formset %} {{field}}<!----><!---->
-        {% if field.instance.id %}
-        <a
-          class="btn btn-danger"
-          href="{% url 'field_delete' field.instance.id %}"
-          >x</a
-        >
-        {% endif %} {% endfor %}
+        {% for field in formset %}
+        <div class="row mx-1 mb-3">
+          {{field}} {% if field.instance.id %}
+          <a
+            href="{% url 'field_delete' field.instance.id %}"
+            class="col-1 btn btn-danger"
+            >x</a
+          ><!---->{% endif %}<!---->
+        </div>
+        {% endfor %}
 
         <input type="submit" value="Add" class="btn btn-primary" />
       </form>

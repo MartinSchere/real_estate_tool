@@ -33,7 +33,9 @@ class FormDeleteView(DeleteView):
 
 class FieldDeleteView(DeleteView):
     model = Field
-    success_url = reverse_lazy('form_generator')
+
+    def get_success_url(self):
+        return self.get_object().form.get_absolute_url()
 
     def get(self, *args, **kwargs):
         return super().post(*args, **kwargs)
@@ -55,7 +57,9 @@ def FormCreateView(request):
 
 class FormView(View):
     FieldFormSet = inlineformset_factory(
-        Form, Field, fields=('question',), extra=1, can_delete=False)
+        Form, Field, fields=('question',), extra=1, can_delete=False, widgets={
+            'question': forms.TextInput(attrs={'class': 'form-control col-11'})
+        })
 
     def get(self, request, pk=None):
         ctx = {
@@ -69,8 +73,8 @@ class FormView(View):
         form = self.FieldFormSet(request.POST, instance=instance)
         if form.is_valid():
             i = form.save()
-            return redirect(instance.get_absolute_url())
-        return redirect(reverse_lazy('form_generator'))
+        print(form.errors)
+        return redirect(instance.get_absolute_url())
 
 
 def ThanksView(request):
