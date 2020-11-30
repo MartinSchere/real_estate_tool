@@ -5,12 +5,14 @@ from django import forms
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.generic.edit import DeleteView, CreateView
-from django.views.generic import View, ListView
+from django.views.generic import View, ListView, DetailView
 
 from django.forms import inlineformset_factory
 
 from .models import Form, Field, Submission
 from .forms import FormCreate, CustomForm
+
+from django.http import HttpResponseForbidden
 
 
 class FormListView(ListView):
@@ -20,6 +22,8 @@ class FormListView(ListView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context['form'] = FormCreate()
+        context['submissions'] = Submission.objects.filter(
+            form__user=self.request.user)
         return context
 
 
@@ -29,6 +33,22 @@ class FormDeleteView(DeleteView):
 
     def get(self, *args, **kwargs):
         return super().post(*args, **kwargs)
+
+
+class SubmissionDeleteView(DeleteView):
+    model = Submission
+
+    def get_success_url(self):
+        return reverse_lazy('form_generator')
+
+    def get(self, *args, **kwargs):
+        return super().post(*args, **kwargs)
+
+
+class SubmissionDetailView(DetailView):
+    model = Submission
+    template_name = 'form_generator/submission_detail.html'
+    context_object_name = "submission"
 
 
 class FieldDeleteView(DeleteView):
@@ -85,12 +105,19 @@ class FormFillView(View):
 
     def get(self, request, pk):
         form = Form.objects.get(pk=pk)
+        if not request.user == form.user and f'filled_{pk}' not in request.session:
+            return HttpResponseForbidden()
         return render(self.request, 'form_generator/form.html', {'form': form})
 
     def post(self, request, pk):
         f = Form.objects.get(pk=pk)
+
+        if not request.user == f.user and f'filled_{pk}' not in request.session:
+            return HttpResponseForbidden()
+
         form = f.applicant_form(request.POST)
         if form.is_valid():
             submission = Submission.objects.create(
                 form=f, data=form.cleaned_data)
+            request.session[f'filled_{pk}'] = True
             return redirect('thanks')

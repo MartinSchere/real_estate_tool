@@ -1,26 +1,42 @@
 {% extends 'app/base.html' %} {% load crispy_forms_tags %} {% block content %}
 <div class="container mt-1 bg-white shadow-sm p-0">
   <h2 class="display-5 font-weight-normal card-header">Form creator</h2>
-  <div class="p-4">
-    <h4 class="font-weight-normal mb-3">Your forms</h4>
-    {% for form in forms %}
-    <div
-      class="form-card py-2 pl-1 bg-light mb-1"
-      onclick="location.href='{% url 'form_edit' form.id %}'"
-    >
-      <h3 class="">{{form.name}}</h3>
+  <div class="row p-4">
+    <div class="col">
+      <h4 class="font-weight-normal mb-3">Your forms</h4>
+      {% for form in forms %}
+      <div
+        class="form-card card p-3 d-flex justify-content-between"
+        onclick="location.href='{% url 'form_edit' form.id %}'"
+      >
+        <h3 class="d-inline">{{form.name}}</h3>
+        <p>{{form.submission_set.count}} submissions</p>
+      </div>
+      {% empty %}
+      <h5 class="font-weight-normal my-4 text-muted">
+        You haven't created any forms yet...
+      </h5>
+      {% endfor %}
+      <hr />
+      <form action="{% url 'form_create' %}" class="mt-2 p-0" method="POST">
+        <h4 class="font-weight-normal">Add a new form</h4>
+        {% csrf_token %} {{form|crispy}}
+        <input type="submit" value="Create" class="btn btn-primary" />
+      </form>
     </div>
-    {% empty %}
-    <h5 class="font-weight-normal my-4 text-muted">
-      You haven't created any forms yet...
-    </h5>
-    {% endfor %}
-    <hr />
-    <form action="{% url 'form_create' %}" class="mt-2 col-6 p-0" method="POST">
-      <h4 class="font-weight-normal">Add a new form</h4>
-      {% csrf_token %} {{form|crispy}}
-      <input type="submit" value="Create" class="btn btn-primary" />
-    </form>
+    <div class="col" data-spy="scroll">
+      <h4 class="font-weight-normal mb-3">Submissions</h4>
+      {% for submission in submissions %}
+      <div
+        class="card-sm form-card"
+        onclick="location.href='{% url 'submission_detail' submission.id %}'"
+      >
+        <h5 class="card-header">
+          {{submission.form.name}} <small>{{submission.created_at}}</small>
+        </h5>
+      </div>
+      {% endfor %}
+    </div>
   </div>
 </div>
 {% endblock content %}

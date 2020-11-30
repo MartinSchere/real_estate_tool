@@ -1,0 +1,26 @@
+{% extends 'app/base.html' %} {% load crispy_forms_tags %}{% block content %}<!---->
+
+<div class="container mt-1 bg-white shadow-sm p-0 pb-3">
+  {% if messages %} {% for message in messages %}
+  <div class="alert alert-{{ message.tags }}">{{message}}</div>
+  {% endfor %} {% endif %}
+  <h2 class="display-5 font-weight-normal card-header">
+    {{submission.form.name}} submission details
+    <p class="lead d-inline">Submitted at {{submission.created_at}}</p>
+  </h2>
+  <div class="card-body">
+    {% for question, answer in submission.data.items %}
+    <h5>Q: {{question}}</h5>
+    <p>A: {{answer}}</p>
+    {% endfor %}
+  </div>
+  <div class="d-flex justify-content-center">
+    <a
+      onclick="return confirm('Are you sure you want to delete this submission?')"
+      href="{% url 'submission_delete' submission.id %}"
+      class="btn btn-danger"
+      >Delete</a
+    >
+  </div>
+</div>
+{% endblock content %}

@@ -15,4 +15,10 @@ urlpatterns = [
         path('field/delete/<int:pk>/',
              views.FieldDeleteView.as_view(), name="field_delete")
     ])),
+    path('submission/', include([
+        path('detail/<int:pk>/', views.SubmissionDetailView.as_view(),
+             name="submission_detail"),
+        path('delete/<int:pk>/', views.SubmissionDeleteView.as_view(),
+             name="submission_delete")
+    ]))
 ]
