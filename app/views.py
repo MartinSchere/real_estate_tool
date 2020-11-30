@@ -16,8 +16,8 @@ from django.contrib.auth.models import User
 
 from multi_form_view import MultiFormView, MultiModelFormView
 
-from .models import Property, Loan, Tenant
-from .forms import UserRegisterForm, LoanCreateForm, LoanEditForm, PropertyForm, TenantForm
+from .models import Property, Loan, Tenant, Expense
+from .forms import UserRegisterForm, LoanCreateForm, LoanEditForm, PropertyForm, TenantForm, ExpenseCreateForm
 from .user_settings import PropertyFilterSetting, CreditScoreSetting
 from .filters import PropertyFilter, PropertyFilterWithoutTenant
 
@@ -26,6 +26,8 @@ from .utils import get_property_image
 from .zillow import get_estimated_value
 
 from user_settings.utils import get_user_setting, set_user_setting
+
+from datetime import date, timedelta
 
 
 class SignUpView(SuccessMessageMixin, CreateView):
@@ -203,41 +205,24 @@ class ExpenseTableView(View):
         other_sum = sum(
             (p.property_taxes + p.insurance for p in user_properties)
         )
+        month_expenses = Expense.objects.filter(
+            user=self.request.user, date__year=date.today().year,
+            date__month=date.today().month)
+
         ctx = {
             'properties': user_properties,
-            'total': mortgage_sum + other_sum
+            'total_fixed': mortgage_sum + other_sum,
+            'total_mo': mortgage_sum + other_sum + sum(
+                (e.amount for e in month_expenses)
+            ),
+            'expenses': month_expenses,
+            'form': ExpenseCreateForm()
         }
         return render(request, 'app/expense_table.html', ctx)
 
-# SETTINGS
-
-
-class SettingsView(MultiFormView, LoginRequiredMixin):
-    template_name = 'app/settings.html'
-    form_classes = {
-        'property_filter_setting': PropertyFilterSetting,
-        'credit_score_setting': CreditScoreSetting,
-    }
-    success_url = '/settings/'
-
-    def get_initial(self):
-        initial = {
-            'property_filter_setting': {
-                'filter_by_loans': get_user_setting('filter_by_loans', request=self.request)['value'],
-                'filter_by_tenants': get_user_setting('filter_by_tenants', request=self.request)['value'],
-            },
-            'credit_score_setting': {
-                'credit_score': get_user_setting('credit_score', request=self.request)['value']
-            }}
-        return initial
-
-    def forms_valid(self, forms):
-        # print(forms['property_filter_setting'].cleaned_data)
-        for key, value in forms.items():
-            for k, v in value.cleaned_data.items():
-                try:
-                    set_user_setting(k, v, request=self.request)
-                except IntegrityError:
-                    pass
-        messages.success(self.request, "Changes saved successfully")
-        return super().forms_valid(forms)
+    def post(self, request, *args, **kwargs):
+        form = ExpenseCreateForm(request.POST)
+        if form.is_valid():
+            form.instance.user = self.request.user
+            form.save()
+            return redirect(reverse_lazy('expense_table'))

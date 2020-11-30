@@ -9,7 +9,7 @@ from django.contrib.auth.forms import UserCreationForm
 from djmoney.forms.widgets import MoneyWidget
 from django_google_maps import widgets as map_widgets
 
-from .models import Property, Loan, Tenant
+from .models import Property, Loan, Tenant, Expense
 
 
 class CustomMoneyWidget(MoneyWidget):
@@ -86,4 +86,13 @@ class TenantForm(forms.ModelForm):
         exclude = ('rental_property',)
         widgets = {
             'rent_payment': CustomMoneyWidget(),
+        }
+
+
+class ExpenseCreateForm(forms.ModelForm):
+    class Meta:
+        model = Expense
+        fields = ('name', 'amount')
+        widgets = {
+            'amount': CustomMoneyWidget(),
         }

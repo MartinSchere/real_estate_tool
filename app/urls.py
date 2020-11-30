@@ -41,8 +41,5 @@ urlpatterns = [
 
     path('expense_table/', views.ExpenseTableView.as_view(), name="expense_table"),
 
-    # Settings
-
-    path('settings/', views.SettingsView.as_view(), name="settings")
 
 ]

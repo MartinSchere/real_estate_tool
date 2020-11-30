@@ -1,4 +1,5 @@
-{% extends 'app/base.html' %} {% load static %}{% block content %}
+{% extends 'app/base.html' %} {% load static %} {% load crispy_forms_tags %}<!---->
+{% block content %}
 <div class="container-fluid mt-2">
   <div class="row justify-content-center m-0 p-3 bg-white shadow-sm mb-4">
     <div class="col-lg-4">
@@ -55,7 +56,7 @@
       {% endfor %}
       <tr class="table-secondary font-weight-bold">
         <th scope="row">Total</th>
-        <td>{{total}}</td>
+        <td>{{total_fixed}}</td>
       </tr>
     </tbody>
   </table>
@@ -69,17 +70,33 @@
     </thead>
     <tbody>
       <tr>
-        <th scope="row">fixed expenses</th>
-        <td>{{total}}</td>
+        <th scope="row">Fixed expenses</th>
+        <td>{{total_fixed}}</td>
       </tr>
+      {% for expense in expenses %}
       <tr>
-        <th scope="row">More coming soon!</th>
-        <td></td>
+        <th>{{expense.name}}</th>
+        <td>{{expense.amount}}</td>
+      </tr>
+      {% endfor %}
+      <tr class="table-secondary font-weight-bold">
+        <th scope="row">Total</th>
+        <td>{{total_mo}}</td>
       </tr>
     </tbody>
   </table>
+  <div class="col-lg-6 m-auto">
+    <h5 class="text-center">Add an expense</h5>
+    <hr />
+    <form method="POST">
+      {% csrf_token %} {{form|crispy}}
+      <div class="d-flex justify-content-center">
+        <input type="submit" value="Add" class="btn btn-primary" />
+      </div>
+    </form>
+  </div>
+  {% endblock content %} {% block script %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+  <script src="{% static 'js/expense-charts.js' %}"></script>
+  {% endblock script %}
 </div>
-{% endblock content %} {% block script %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
-<script src="{% static 'js/expense-charts.js' %}"></script>
-{% endblock script %}

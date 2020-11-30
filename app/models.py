@@ -11,6 +11,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 from django_google_maps import fields as map_fields
 
 from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 
 from django.urls import reverse
 
@@ -136,18 +137,8 @@ class Tenant(models.Model):
         return self.name
 
 
-class Renovation(models.Model):
-    property_renovated = models.ForeignKey(Property, on_delete=models.CASCADE)
-    cost = MoneyField(max_digits=20, decimal_places=2,
-                      default_currency='USD')
-
-    def __str__(self):
-        return f'{self.cost} renovation for {self.property_renovated}'
-
-
 class Expense(models.Model):
-    prop = models.OneToOneField(
-        Property, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     name = models.CharField(max_length=30)
     date = models.DateField(blank=True, null=True, auto_now=True)
     amount = MoneyField(max_digits=20, decimal_places=2,
